@@ -7,7 +7,7 @@ public class DynamicGrid : MonoBehaviour
 {
     public int columnCount = 4;      // Number of columns to display
     public float spacingX = 5f;      // Horizontal spacing between cells
-    public float spacingY = 5f;      // Vertical spacing between cells
+    public float spacingY = 3f;      // Vertical spacing between cells
     public float aspectRatio = 1.2f; // Height = Width * aspectRatio
 
     private GridLayoutGroup grid;
