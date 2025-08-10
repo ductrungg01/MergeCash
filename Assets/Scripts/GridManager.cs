@@ -17,6 +17,14 @@ public class GridManager : MonoBehaviour
     private Card[,] grid;
     int[] possibleValues = new int[] { 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048 };
 
+    #region SINGLETON
+    public static GridManager GetInstance()
+    {
+        return Instance;
+    }
+    #endregion
+
+    #region MonoBehavior Funcs
     private void Awake()
     {
         // Singleton pattern
@@ -31,44 +39,16 @@ public class GridManager : MonoBehaviour
         UpdateCellSpacing();
     }
 
-    public static GridManager GetInstance()
-    {
-        return Instance;
-    }
-
     void Start()
     {
         ClearCards();
         InitializeCards();
-        //SpawnNewRow();
+        SpawnNewRow();
         SpawnNewRow();
     }
+    #endregion
 
-    private void InitializeCards()
-    {
-        grid = new Card[maxColumns, maxRows];
-        for (int i = 0; i < maxRows; i++)
-        {
-            for (int j = 0; j < maxColumns; j++)
-            {
-                GameObject gameObject = Instantiate(cardPrefab, gridContainer);
-                Card card = gameObject.GetComponent<Card>();
-                card.SetValue(0);
-                card.SetGridPosition(j, i);
-                card.gridManager = this;
-                grid[j, i] = card;
-            }
-        }
-    }
-
-    private void ClearCards()
-    {
-        for (int i = gridContainer.childCount - 1; i >= 0; i--)
-        {
-            Destroy(gridContainer.GetChild(i).gameObject);
-        }
-    }
-
+    #region UPDATING
     private void UpdateCellSize()
     {
         cellSize = gridContainer.gameObject.GetComponent<GridLayoutGroup>().cellSize;
@@ -79,6 +59,9 @@ public class GridManager : MonoBehaviour
         spacing = gridContainer.gameObject.GetComponent<GridLayoutGroup>().spacing;
     }
 
+    #endregion
+
+    #region GETTERS
     public Vector2 GetCellPosition(int col, int row)
     {
         float x = (cellSize.x + spacing.x) * col + cellSize.x / 2;
@@ -118,6 +101,65 @@ public class GridManager : MonoBehaviour
         return row;
     }
 
+    public int GetCardValueAt(int col, int row)
+    {
+        if (col < 0 || col >= maxColumns || row < 0 || row >= maxRows) return 0;
+        return grid[col, row].GetValue();
+    }
+
+    public Card GetLastCardOfColumn(int col)
+    {
+        for (int row = maxRows - 1; row >= 0; row--)
+        {
+            if (grid[col, row] != null && grid[col, row].GetValue() != 0)
+            {
+                return grid[col, row];
+            }
+        }
+        return null;
+    }
+    #endregion
+
+    #region SETTERS
+    
+
+    public void SetCardValueAt(int col, int row, int newValue)
+    {
+        grid[col, row].SetValue(newValue);
+    }
+    #endregion
+
+    private void InitializeCards()
+    {
+        grid = new Card[maxColumns, maxRows];
+        for (int i = 0; i < maxRows; i++)
+        {
+            for (int j = 0; j < maxColumns; j++)
+            {
+                GameObject gameObject = Instantiate(cardPrefab, gridContainer);
+                Card card = gameObject.GetComponent<Card>();
+                card.SetValue(0);
+                card.SetGridPosition(j, i);
+                card.gridManager = this;
+                grid[j, i] = card;
+            }
+        }
+    }
+
+    private void ClearCards()
+    {
+        for (int i = gridContainer.childCount - 1; i >= 0; i--)
+        {
+            Destroy(gridContainer.GetChild(i).gameObject);
+        }
+    }
+
+    public bool IsLastCardOfColumn(Card card)
+    {
+        (int col, int row) = card.GetGridPosition();
+        Card lastCard = GetLastCardOfColumn(col);
+        return lastCard == card;
+    }
 
     public void SpawnNewRow()
     {
@@ -135,39 +177,8 @@ public class GridManager : MonoBehaviour
 
         for (int col = 0; col < maxColumns; col++)
         {
-            int val = 2;//possibleValues[Random.Range(0, 3)];
+            int val = possibleValues[Random.Range(0, 3)];
             grid[col, 0].SetValue(val);
         }
     }
-
-    public int GetCardValueAt(int col, int row)
-    {
-        if (col < 0 || col >= maxColumns || row < 0 || row >= maxRows) return 0;
-        return grid[col, row].GetValue();
-    }
-
-    public void SetCardValueAt(int col, int row, int newValue)
-    {
-        grid[col, row].SetValue(newValue);
-    }
-
-    public Card GetLastCardOfColumn(int col)
-    {
-        for (int row = maxRows - 1; row >= 0; row--)
-        {
-            if (grid[col, row] != null && grid[col, row].GetValue() != 0)
-            {
-                return grid[col, row];
-            }
-        }
-        return null;
-    }
-
-    public bool IsLastCardOfColumn(Card card)
-    {
-        (int col, int row) = card.GetGridPosition();
-        Card lastCard = GetLastCardOfColumn(col);
-        return lastCard == card;
-    }
-
 }

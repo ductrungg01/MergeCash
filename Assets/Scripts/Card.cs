@@ -2,8 +2,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using System.Collections.Generic;
-using UnityEngine.UI;
 
 [ExecuteAlways]
 public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
@@ -18,7 +16,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     public GridManager gridManager;
 
-
+    #region MonoBehavior funcs
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
@@ -38,6 +36,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             Debug.Log("Left mouse clicked.");
         }
     }
+    #endregion
 
     #region SETTERS
     public void SetValue(int newValue)

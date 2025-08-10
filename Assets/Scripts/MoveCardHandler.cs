@@ -19,12 +19,17 @@ public class MoveCardHandler : MonoBehaviour
             if (targetCard.GetValue() == card.GetValue())
             {
                 gridManager.SetCardValueAt(targetCol, targetCard.GetGridPosition().Item2, card.GetValue() * 2);
-                gridManager.SetCardValueAt(oriCol, oriRow, 0);
+            } else
+            {
+                gridManager.SetCardValueAt(targetCol, targetCard.GetGridPosition().Item2 + 1, card.GetValue());
             }
+            gridManager.SetCardValueAt(oriCol, oriRow, 0);
         } else
         {
             gridManager.SetCardValueAt(targetCol, 0, card.GetValue());
             gridManager.SetCardValueAt(oriCol, oriRow, 0);
         }
+
+        gridManager.SpawnNewRow();
     }
 }
