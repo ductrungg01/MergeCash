@@ -1,5 +1,7 @@
+﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class GridManager : MonoBehaviour
 {
@@ -41,7 +43,7 @@ public class GridManager : MonoBehaviour
 
     void Start()
     {
-        ClearCards();
+        ClearCards(); // Clear Debug card prepared in design
         InitializeCards();
         SpawnNewRow();
         SpawnNewRow();
@@ -118,10 +120,24 @@ public class GridManager : MonoBehaviour
         }
         return null;
     }
+
+    private int GetMaxValueOnBoard()
+    {
+        int maxVal = 0;
+        for (int c = 0; c < maxColumns; c++)
+        {
+            for (int r = 0; r < maxRows; r++)
+            {
+                if (grid[c, r] != null)
+                    maxVal = Mathf.Max(maxVal, grid[c, r].GetValue());
+            }
+        }
+        return maxVal;
+    }
     #endregion
 
     #region SETTERS
-    
+
 
     public void SetCardValueAt(int col, int row, int newValue)
     {
@@ -161,7 +177,7 @@ public class GridManager : MonoBehaviour
         return lastCard == card;
     }
 
-    public void SpawnNewRow()
+    public void SpawnNewRow(int debugValue = 0)
     {
         for (int col = 0; col < maxColumns; col++)
         {
@@ -175,9 +191,21 @@ public class GridManager : MonoBehaviour
             }
         }
 
+        int _maxValue = Math.Max(4, GetMaxValueOnBoard());
+        int maxIndex = 0;
+        for (int i = 0; i < possibleValues.Length; i++)
+        {
+            if (possibleValues[i] == _maxValue)
+            {
+                maxIndex = i;
+                break;
+            }
+        }
+        int upperIndex = Mathf.Min(maxIndex + 1, possibleValues.Length - 1);
+
         for (int col = 0; col < maxColumns; col++)
         {
-            int val = possibleValues[Random.Range(0, 3)];
+            int val = (debugValue == 0 ? possibleValues[Random.Range(0, upperIndex + 1)] : debugValue);
             grid[col, 0].SetValue(val);
         }
     }

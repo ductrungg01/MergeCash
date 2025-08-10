@@ -9,33 +9,25 @@ public class MergeCardHandler : MonoBehaviour
         gridManager = GridManager.GetInstance();
     }
 
-    public void TryMergeColumn(int col)
+    public bool TryMergeColumn(int col)
     {
-        return;
-        /*for (int row = 0; row < gridManager.maxRows - 1; row++)
+        bool isMerged = false;
+        for (int row = gridManager.maxRows - 1; row > 0; row--)
         {
-            Card card1 = gridManager.GetCardAt(col, row);
-            Card card2 = gridManager.GetCardAt(col, row + 1);
-            if (card1 != null && card2 != null && card1.value == card2.value)
+            int val1 = gridManager.GetCardValueAt(col, row);
+            int val2 = gridManager.GetCardValueAt(col, row - 1);
+            if (val1 > 0 && val2 > 0)
             {
-                card1.SetValue(card1.value * 2);
-                Destroy(card2.gameObject);
-                ShiftColumnDown(col, row + 1);
-                row--;
+                if (val1 == val2)
+                {
+                    gridManager.SetCardValueAt(col, row - 1, val1 * 2);
+                    gridManager.SetCardValueAt(col, row, 0);
+                    isMerged = true;
+                }
+                else break;
             }
-        }*/
-    }
-
-    /*
-    private void ShiftColumnDown(int col, int startRow)
-    {
-        for (int row = startRow; row < gridManager.maxRows - 1; row++)
-        {
-            gridManager.SetCardAt(col, row, gridManager.GetCardAt(col, row + 1));
-            if (gridManager.GetCardAt(col, row) != null)
-                gridManager.GetCardAt(col, row).SetGridPosition(col, row);
+            
         }
-        gridManager.SetCardAt(col, gridManager.maxRows - 1, null);
+        return isMerged;
     }
-    */
 }

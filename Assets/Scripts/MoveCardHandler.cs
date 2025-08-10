@@ -9,7 +9,7 @@ public class MoveCardHandler : MonoBehaviour
         gridManager = GridManager.GetInstance();
     }
 
-    public void MoveCard(Card card, int targetCol)
+    public void MoveCard(Card card, int targetCol, bool isSpawnNewRowAfterMove = true)
     {
         Card targetCard = gridManager.GetLastCardOfColumn(targetCol);
         var (oriCol, oriRow) = card.GetGridPosition();
@@ -18,7 +18,12 @@ public class MoveCardHandler : MonoBehaviour
         {
             if (targetCard.GetValue() == card.GetValue())
             {
-                gridManager.SetCardValueAt(targetCol, targetCard.GetGridPosition().Item2, card.GetValue() * 2);
+                int targetRow = targetCard.GetGridPosition().Item2;
+                gridManager.SetCardValueAt(targetCol, targetRow, card.GetValue() * 2);
+                if (Player.GetInstance().mergeCardHandler.TryMergeColumn(targetCol))
+                {
+                    isSpawnNewRowAfterMove = false;
+                }
             } else
             {
                 gridManager.SetCardValueAt(targetCol, targetCard.GetGridPosition().Item2 + 1, card.GetValue());
@@ -29,7 +34,10 @@ public class MoveCardHandler : MonoBehaviour
             gridManager.SetCardValueAt(targetCol, 0, card.GetValue());
             gridManager.SetCardValueAt(oriCol, oriRow, 0);
         }
-
-        gridManager.SpawnNewRow();
+        
+        if (isSpawnNewRowAfterMove)
+        {
+            gridManager.SpawnNewRow();
+        }
     }
 }
