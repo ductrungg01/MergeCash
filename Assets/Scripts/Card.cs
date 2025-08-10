@@ -5,20 +5,41 @@ using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
+[ExecuteAlways]
 public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    public int value = 1;
+    [SerializeField] private int value = 2;
     public TMP_Text text;
 
-    private Vector2 startPos;
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;
 
     private int col, row;
-    private Vector3 originalPosition;
 
     public GridManager gridManager;
 
+
+    private void Awake()
+    {
+        rectTransform = GetComponent<RectTransform>();
+        canvasGroup = GetComponent<CanvasGroup>();
+        UpdateText();
+    }
+
+    void Start()
+    {
+        UpdateText();
+    }
+
+    void Update()
+    {
+        if (Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            Debug.Log("Left mouse clicked.");
+        }
+    }
+
+    #region SETTERS
     public void SetValue(int newValue)
     {
         value = newValue;
@@ -26,25 +47,23 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         {
             text.SetText(value.ToString());
         }
+
+        UpdateCardVisibility();
     }
 
     public void SetGridPosition(int c, int r)
     {
         col = c;
         row = r;
-        UpdatePositionInUI();
     }
+    #endregion
+
+    #region GETTERS
+    public int GetValue() { return value; }
 
     public (int, int) GetGridPosition()
     {
         return (col, row);
-    }
-
-    public void UpdatePositionInUI()
-    {
-        Vector2 cellPos = gridManager.GetCellPosition(col, row);
-        rectTransform.anchoredPosition = cellPos;
-        originalPosition = rectTransform.position;
     }
 
     private void UpdateText()
@@ -53,63 +72,62 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             text.text = value.ToString();
     }
 
-    private void Awake()
-    {
-        rectTransform = GetComponent<RectTransform>();
-        canvasGroup = GetComponent<CanvasGroup>();
-    }
+    #endregion
 
-    void Start()
-    {
-        UpdateText();
-    }
+    #region DRAGGING
+    private int originalCol;
+    private Vector3 originalPosition;
 
-    //Ham debug object co dang duoc keo tha:
     public void OnBeginDrag(PointerEventData eventData)
     {
-        Debug.Log("Started dragging");
-        startPos = rectTransform.anchoredPosition;
+        if (!gridManager.IsLastCardOfColumn(this))
+        {
+            Debug.Log("This is not last card of column => do not drag");
+            eventData.pointerDrag = null; // Cancel drag
+            return;
+        }
+
+        originalCol = col; // Save the original column
+        originalPosition = rectTransform.localPosition; // Save the original position
+
+        Debug.Log($"Start drag from column: {originalCol}");
+
         canvasGroup.alpha = 0.6f;
         canvasGroup.blocksRaycasts = false;
-        originalPosition = rectTransform.position;
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        Debug.Log("Dragging...");
         rectTransform.position = eventData.position;
-
-        //transform.position = eventData.position;
-        Vector2 pos;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            rectTransform.parent as RectTransform,
-            eventData.position,
-            eventData.pressEventCamera,
-            out pos
-        );
     }
-
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        Debug.Log("Stopped dragging");
-
         canvasGroup.blocksRaycasts = true;
 
         int targetCol = GridManager.GetInstance().GetNearestColumn(eventData.position);
-        int targetRow = GridManager.GetInstance().GetNearestRow(eventData.position);
 
-        Player.GetInstance().moveCardHandler.MoveCard(this, targetCol, targetRow);
-    }
-
-
-
-    void Update()
-    {
-        if (Mouse.current.leftButton.wasPressedThisFrame)
+        if (targetCol != originalCol)
         {
-            Debug.Log("Left mouse clicked.");
+            Card targetLastCard = gridManager.GetLastCardOfColumn(targetCol);
+            Debug.Log($"Drop to {targetCol} (last card: {targetLastCard?.GetValue()})");
+
+            Player.GetInstance().moveCardHandler.MoveCard(this, targetCol);
+        }
+        else
+        {
+            Debug.Log("Same column => don't do anything");
         }
 
+        rectTransform.localPosition = originalPosition;
+        UpdateCardVisibility();
+    }
+    #endregion
+
+    void UpdateCardVisibility()
+    {
+        canvasGroup.alpha = (value == 0 ? 0f : 1f);
+        canvasGroup.interactable = value != 0;
+        canvasGroup.blocksRaycasts = value != 0;
     }
 }

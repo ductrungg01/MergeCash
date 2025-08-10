@@ -12,7 +12,7 @@ public class GridManager : MonoBehaviour
     public int maxRows = 8;
 
     private Vector2 cellSize = new Vector2(0, 0);
-    public Vector2 spacing = new Vector2(10, 10);
+    private Vector2 spacing = new Vector2(0, 0);
 
     private Card[,] grid;
     int[] possibleValues = new int[] { 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048 };
@@ -28,6 +28,7 @@ public class GridManager : MonoBehaviour
         Instance = this;
 
         UpdateCellSize();
+        UpdateCellSpacing();
     }
 
     public static GridManager GetInstance()
@@ -37,13 +38,30 @@ public class GridManager : MonoBehaviour
 
     void Start()
     {
-        grid = new Card[maxColumns, maxRows];
-        ClearDebugCards();
-        SpawnNewRow();
+        ClearCards();
+        InitializeCards();
+        //SpawnNewRow();
         SpawnNewRow();
     }
 
-    private void ClearDebugCards()
+    private void InitializeCards()
+    {
+        grid = new Card[maxColumns, maxRows];
+        for (int i = 0; i < maxRows; i++)
+        {
+            for (int j = 0; j < maxColumns; j++)
+            {
+                GameObject gameObject = Instantiate(cardPrefab, gridContainer);
+                Card card = gameObject.GetComponent<Card>();
+                card.SetValue(0);
+                card.SetGridPosition(j, i);
+                card.gridManager = this;
+                grid[j, i] = card;
+            }
+        }
+    }
+
+    private void ClearCards()
     {
         for (int i = gridContainer.childCount - 1; i >= 0; i--)
         {
@@ -54,6 +72,11 @@ public class GridManager : MonoBehaviour
     private void UpdateCellSize()
     {
         cellSize = gridContainer.gameObject.GetComponent<GridLayoutGroup>().cellSize;
+    }
+
+    private void UpdateCellSpacing()
+    {
+        spacing = gridContainer.gameObject.GetComponent<GridLayoutGroup>().spacing;
     }
 
     public Vector2 GetCellPosition(int col, int row)
@@ -68,8 +91,15 @@ public class GridManager : MonoBehaviour
         Vector2 localPoint;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(gridContainer, worldPos, null, out localPoint);
 
-        float colFloat = (localPoint.x - cellSize.x / 2) / (cellSize.x + spacing.x);
-        return Mathf.Clamp(Mathf.RoundToInt(colFloat), 0, maxColumns - 1);
+        // Convert from center origin to top-left origin
+        float originX = localPoint.x + (gridContainer.rect.width / 2);
+
+        float colFloat = originX / (cellSize.x + spacing.x);
+        int col = Mathf.Clamp(Mathf.FloorToInt(colFloat), 0, maxColumns - 1);
+
+        //Debug.Log($"[GetNearestColumn] Mouse localPosX: {localPoint.x:F2}, originX: {originX:F2}, colFloat: {colFloat:F2}, colIndex: {col}");
+
+        return col;
     }
 
     public int GetNearestRow(Vector3 worldPos)
@@ -77,9 +107,17 @@ public class GridManager : MonoBehaviour
         Vector2 localPoint;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(gridContainer, worldPos, null, out localPoint);
 
-        float rowFloat = (-localPoint.y - cellSize.y / 2) / (cellSize.y + spacing.y);
-        return Mathf.Clamp(Mathf.RoundToInt(rowFloat), 0, maxRows - 1);
+        // Convert from center origin to top-left origin
+        float originY = -(localPoint.y - (gridContainer.rect.height / 2));
+
+        float rowFloat = originY / (cellSize.y + spacing.y);
+        int row = Mathf.Clamp(Mathf.FloorToInt(rowFloat), 0, maxRows - 1);
+
+        //Debug.Log($"[GetNearestRow] Mouse localPosY: {localPoint.y:F2}, originY: {originY:F2}, rowFloat: {rowFloat:F2}, rowIndex: {row}");
+
+        return row;
     }
+
 
     public void SpawnNewRow()
     {
@@ -89,39 +127,47 @@ public class GridManager : MonoBehaviour
             {
                 if (grid[col, row] != null)
                 {
-                    grid[col, row + 1] = grid[col, row];
-                    grid[col, row] = null;
-                    grid[col, row + 1].SetGridPosition(col, row + 1);
+                    grid[col, row + 1].SetValue(grid[col, row].GetValue());
+                    grid[col, row].SetValue(0);
                 }
             }
         }
 
         for (int col = 0; col < maxColumns; col++)
         {
-            int val = possibleValues[Random.Range(0, 2)];
-            CreateCardAtPosition(col, 0, val);
+            int val = 2;//possibleValues[Random.Range(0, 3)];
+            grid[col, 0].SetValue(val);
         }
     }
 
-    public void CreateCardAtPosition(int col, int row, int value)
+    public int GetCardValueAt(int col, int row)
     {
-        GameObject go = Instantiate(cardPrefab, gridContainer);
-        Card card = go.GetComponent<Card>();
-        card.gridManager = this;
-        card.SetValue(value);
-        card.SetGridPosition(col, row);
-
-        grid[col, row] = card;
+        if (col < 0 || col >= maxColumns || row < 0 || row >= maxRows) return 0;
+        return grid[col, row].GetValue();
     }
 
-    public Card GetCardAt(int col, int row)
+    public void SetCardValueAt(int col, int row, int newValue)
     {
-        if (col < 0 || col >= maxColumns || row < 0 || row >= maxRows) return null;
-        return grid[col, row];
+        grid[col, row].SetValue(newValue);
     }
 
-    public void SetCardAt(int col, int row, Card card)
+    public Card GetLastCardOfColumn(int col)
     {
-        grid[col, row] = card;
+        for (int row = maxRows - 1; row >= 0; row--)
+        {
+            if (grid[col, row] != null && grid[col, row].GetValue() != 0)
+            {
+                return grid[col, row];
+            }
+        }
+        return null;
     }
+
+    public bool IsLastCardOfColumn(Card card)
+    {
+        (int col, int row) = card.GetGridPosition();
+        Card lastCard = GetLastCardOfColumn(col);
+        return lastCard == card;
+    }
+
 }

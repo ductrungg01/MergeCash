@@ -11,7 +11,8 @@ public class MergeCardHandler : MonoBehaviour
 
     public void TryMergeColumn(int col)
     {
-        for (int row = 0; row < gridManager.maxRows - 1; row++)
+        return;
+        /*for (int row = 0; row < gridManager.maxRows - 1; row++)
         {
             Card card1 = gridManager.GetCardAt(col, row);
             Card card2 = gridManager.GetCardAt(col, row + 1);
@@ -22,9 +23,10 @@ public class MergeCardHandler : MonoBehaviour
                 ShiftColumnDown(col, row + 1);
                 row--;
             }
-        }
+        }*/
     }
 
+    /*
     private void ShiftColumnDown(int col, int startRow)
     {
         for (int row = startRow; row < gridManager.maxRows - 1; row++)
@@ -35,4 +37,5 @@ public class MergeCardHandler : MonoBehaviour
         }
         gridManager.SetCardAt(col, gridManager.maxRows - 1, null);
     }
+    */
 }

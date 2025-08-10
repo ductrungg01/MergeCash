@@ -9,37 +9,22 @@ public class MoveCardHandler : MonoBehaviour
         gridManager = GridManager.GetInstance();
     }
 
-    public void MoveCard(Card card, int targetCol, int targetRow)
+    public void MoveCard(Card card, int targetCol)
     {
-        if (targetRow < 0 || targetRow >= gridManager.maxRows)
-            targetRow = card.GetGridPosition().Item2;
+        Card targetCard = gridManager.GetLastCardOfColumn(targetCol);
+        var (oriCol, oriRow) = card.GetGridPosition();
 
-        var (oldCol, oldRow) = card.GetGridPosition();
-
-        if (gridManager.GetCardAt(targetCol, targetRow) == null)
+        if (targetCard != null)
         {
-            gridManager.SetCardAt(oldCol, oldRow, null);
-            gridManager.SetCardAt(targetCol, targetRow, card);
-            card.SetGridPosition(targetCol, targetRow);
-            Player.GetInstance().mergeCardHandler.TryMergeColumn(targetCol);
-        }
-        else
+            if (targetCard.GetValue() == card.GetValue())
+            {
+                gridManager.SetCardValueAt(targetCol, targetCard.GetGridPosition().Item2, card.GetValue() * 2);
+                gridManager.SetCardValueAt(oriCol, oriRow, 0);
+            }
+        } else
         {
-            Card other = gridManager.GetCardAt(targetCol, targetRow);
-            if (other.value == card.value)
-            {
-                int newValue = card.value * 2;
-                card.SetValue(newValue);
-                Destroy(other.gameObject);
-                gridManager.SetCardAt(targetCol, targetRow, card);
-                gridManager.SetCardAt(oldCol, oldRow, null);
-                card.SetGridPosition(targetCol, targetRow);
-                Player.GetInstance().mergeCardHandler.TryMergeColumn(targetCol);
-            }
-            else
-            {
-                card.SetGridPosition(oldCol, oldRow);
-            }
+            gridManager.SetCardValueAt(targetCol, 0, card.GetValue());
+            gridManager.SetCardValueAt(oriCol, oriRow, 0);
         }
     }
 }
