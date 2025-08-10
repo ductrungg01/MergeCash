@@ -96,12 +96,12 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
         canvasGroup.blocksRaycasts = true;
 
-        int targetCol = gridManager.GetNearestColumn(eventData.position);
-        int targetRow = gridManager.GetNearestRow(eventData.position); 
+        int targetCol = GridManager.GetInstance().GetNearestColumn(eventData.position);
+        int targetRow = GridManager.GetInstance().GetNearestRow(eventData.position);
 
-
-        gridManager.MoveCard(this, targetCol, targetRow);
+        Player.GetInstance().moveCardHandler.MoveCard(this, targetCol, targetRow);
     }
+
 
 
     void Update()
