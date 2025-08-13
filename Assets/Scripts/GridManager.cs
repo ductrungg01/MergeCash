@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -17,7 +18,6 @@ public class GridManager : MonoBehaviour
     private Vector2 spacing = new Vector2(0, 0);
 
     private Card[,] grid;
-    int[] possibleValues = new int[] { 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048 };
 
     #region SINGLETON
     public static GridManager GetInstance()
@@ -191,21 +191,37 @@ public class GridManager : MonoBehaviour
             }
         }
 
-        int _maxValue = Math.Max(4, GetMaxValueOnBoard());
-        int maxIndex = 0;
-        for (int i = 0; i < possibleValues.Length; i++)
-        {
-            if (possibleValues[i] == _maxValue)
-            {
-                maxIndex = i;
-                break;
-            }
-        }
-        int upperIndex = Mathf.Min(maxIndex + 1, possibleValues.Length - 1);
-
         for (int col = 0; col < maxColumns; col++)
         {
-            int val = (debugValue == 0 ? possibleValues[Random.Range(0, upperIndex + 1)] : debugValue);
+            int baseValue = grid[col, 1].GetValue();
+
+            List<int> possibleValues = new List<int>();
+
+            if (baseValue != 0)
+            {
+                int[] tempValues = { baseValue / 2, baseValue * 2, baseValue * 4 };
+
+                foreach (int v in tempValues)
+                {
+                    if (v >= 2)
+                        possibleValues.Add(v);
+                }
+            }
+            else
+            {
+                possibleValues = new List<int>() { 2, 4 };
+            }
+
+            int val;
+            if (debugValue != 0)
+            {
+                val = debugValue;
+            }
+            else
+            {
+                val = possibleValues[Random.Range(0, possibleValues.Count)];
+            }
+
             grid[col, 0].SetValue(val);
         }
     }
