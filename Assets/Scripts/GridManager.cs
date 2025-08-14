@@ -121,18 +121,10 @@ public class GridManager : MonoBehaviour
         return null;
     }
 
-    private int GetMaxValueOnBoard()
+    public bool GetHasMoney(int col, int row)
     {
-        int maxVal = 0;
-        for (int c = 0; c < maxColumns; c++)
-        {
-            for (int r = 0; r < maxRows; r++)
-            {
-                if (grid[c, r] != null)
-                    maxVal = Mathf.Max(maxVal, grid[c, r].GetValue());
-            }
-        }
-        return maxVal;
+        if (grid[col, row].GetValue()  == 0) return false;
+        return grid[col, row].GetHasMoney();
     }
     #endregion
 
@@ -156,10 +148,14 @@ public class GridManager : MonoBehaviour
                 Card card = gameObject.GetComponent<Card>();
                 card.SetValue(0);
                 card.SetGridPosition(j, i);
-                card.gridManager = this;
                 grid[j, i] = card;
             }
         }
+    }
+
+    public void SetHasMoney(int col, int row, bool newValue)
+    {
+        grid[col, row].SetHasMoney(newValue);
     }
 
     private void ClearCards()
@@ -186,6 +182,7 @@ public class GridManager : MonoBehaviour
                 if (grid[col, row] != null)
                 {
                     grid[col, row + 1].SetValue(grid[col, row].GetValue());
+                    grid[col, row + 1].SetHasMoney(grid[col, row].GetHasMoney());
                     grid[col, row].SetValue(0);
                 }
             }
@@ -223,6 +220,7 @@ public class GridManager : MonoBehaviour
             }
 
             grid[col, 0].SetValue(val);
+            grid[col, 0].SetHasMoney(Random.value <= 0.25f); // Money rate: 25%
         }
     }
 }

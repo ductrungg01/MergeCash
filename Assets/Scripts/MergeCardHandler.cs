@@ -9,7 +9,7 @@ public class MergeCardHandler : MonoBehaviour
         gridManager = GridManager.GetInstance();
     }
 
-    public bool TryMergeColumn(int col)
+    public bool TryMergeColumn(int col, ref bool mergeAnyCardHasMoney)
     {
         bool isMerged = false;
         for (int row = gridManager.maxRows - 1; row > 0; row--)
@@ -22,6 +22,12 @@ public class MergeCardHandler : MonoBehaviour
                 {
                     gridManager.SetCardValueAt(col, row - 1, val1 * 2);
                     gridManager.SetCardValueAt(col, row, 0);
+                    if (gridManager.GetHasMoney(col, row) || gridManager.GetHasMoney(col, row - 1))
+                    {
+                        mergeAnyCardHasMoney = true;
+                        gridManager.SetHasMoney(col, row, false);
+                        gridManager.SetHasMoney(col, row - 1, false);
+                    }
                     isMerged = true;
                 }
                 else break;
