@@ -126,14 +126,30 @@ public class GridManager : MonoBehaviour
         if (grid[col, row].GetValue()  == 0) return false;
         return grid[col, row].GetHasMoney();
     }
+
+    public int GetMaxRows() { return maxRows; }
+
+    public bool HasEmptyColumn()
+    {
+        for (int i = 0; i < maxColumns; i++)
+        {
+            if (grid[i, 0].GetValue() == 0) return true;
+        }
+        return false;
+    }
     #endregion
 
     #region SETTERS
-
-
     public void SetCardValueAt(int col, int row, int newValue)
     {
-        grid[col, row].SetValue(newValue);
+        if (row >= maxRows)
+        {
+            // Process Gameover!
+            Debug.Log("Gameover!");
+        } else
+        {
+            grid[col, row].SetValue(newValue);
+        }
     }
     #endregion
 
