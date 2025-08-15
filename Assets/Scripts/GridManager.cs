@@ -45,8 +45,8 @@ public class GridManager : MonoBehaviour
     {
         ClearCards(); // Clear Debug card prepared in design
         InitializeCards();
-        SpawnNewRow();
-        SpawnNewRow();
+        SpawnNewRow(true);
+        SpawnNewRow(true);
     }
     #endregion
 
@@ -137,6 +137,71 @@ public class GridManager : MonoBehaviour
         }
         return false;
     }
+
+    public int GetMaximumDepthOfGrid()
+    {
+        int maxDepth = 0;
+        for (int c = 0; c < maxColumns; c++)
+        {
+            int depth = 0;
+            for (int r = 0; r < maxRows; r++)
+            {
+                if (grid[c, r].GetValue() == 0) break;
+                depth++;
+            }
+            maxDepth = Math.Max(maxDepth, depth);
+        }
+        return maxDepth;
+    }
+
+    public int GetLastValue(int col)
+    {
+        for (int r = maxRows - 1; r >= 0; --r)
+        {
+            if (grid[col, r].GetValue() != 0) return grid[col, r].GetValue();
+        }
+        return 0;
+    }
+
+    public int GetDepthestValue()
+    {
+        int maxDepth = GetMaximumDepthOfGrid();
+        for (int c = 0; c < maxColumns; ++c)
+        {
+            if (grid[c, maxDepth].GetValue() != 0) return grid[c, maxDepth].GetValue();
+        }
+        return 0;
+    }
+
+    public List<int> GetLastValues()
+    {
+        List<int> lastVals = new List<int>();
+        for (int c = 0; c < maxColumns;c++)
+        {
+            int last = GetLastValue(c);
+            if (last != 0)
+            {
+                lastVals.Add(last);
+            }
+        }
+        return lastVals;
+    }
+
+    public int GetMaxValueOnBoard()
+    {
+        int maxValue = int.MinValue;
+
+        for (int row = 0; row < maxRows; row++)
+        {
+            for (int col = 0; col < maxColumns; col++)
+            {
+                maxValue = Math.Max(maxValue, grid[col, row].GetValue());
+            }
+        }
+
+        return maxValue;
+    }
+
     #endregion
 
     #region SETTERS
@@ -189,7 +254,7 @@ public class GridManager : MonoBehaviour
         return lastCard == card;
     }
 
-    public void SpawnNewRow(int debugValue = 0)
+    public void SpawnNewRow(bool isStarting = false, int debugValue = 0)
     {
         for (int col = 0; col < maxColumns; col++)
         {
@@ -208,21 +273,47 @@ public class GridManager : MonoBehaviour
         {
             int baseValue = grid[col, 1].GetValue();
 
+            if (baseValue >= 1024) continue;
+
+            int nextRowBaseValue = grid[col, 2].GetValue();
+
             List<int> possibleValues = new List<int>();
 
-            if (baseValue != 0)
+            if (isStarting)
             {
-                int[] tempValues = { baseValue / 2, baseValue * 2, baseValue * 4 };
-
-                foreach (int v in tempValues)
-                {
-                    if (v >= 2)
-                        possibleValues.Add(v);
-                }
+                possibleValues = new List<int>() { 2, 4, 8 };
             }
             else
             {
-                possibleValues = new List<int>() { 2, 4 };
+                if (baseValue != 0)
+                {
+                    int currentMax = GetMaxValueOnBoard();
+                    int capValue = Mathf.Min(currentMax, 2048);
+
+                    possibleValues.Add(baseValue); 
+                    if (Random.value < 0.5f) possibleValues.Add(Mathf.Min(baseValue * 2, capValue));
+                    if (Random.value < 0.2f && baseValue > 2) possibleValues.Add(baseValue / 2);
+
+                    if (Random.value < 0.3f) possibleValues.Add(2);
+                    if (Random.value < 0.2f) possibleValues.Add(4);
+                }
+                else // is empty column
+                {
+                    if (GetMaximumDepthOfGrid() > 5)
+                    {
+                        int depthestValue = GetDepthestValue();
+                        possibleValues.Add(depthestValue);
+                    }
+                    else
+                    {
+                        possibleValues = GetLastValues();
+                        int n = possibleValues.Count;
+                        for (int i = 0; i < n; ++i)
+                        {
+                            if (possibleValues[i] > 2) possibleValues.Add(possibleValues[i] / 2);
+                        }
+                    }
+                }
             }
 
             int val;
@@ -236,7 +327,9 @@ public class GridManager : MonoBehaviour
             }
 
             grid[col, 0].SetValue(val);
-            grid[col, 0].SetHasMoney(Random.value <= 0.25f); // Money rate: 25%
+            grid[col, 0].SetHasMoney(Random.value <= 0.35f); // Money rate: 35%
         }
+
+        Player.GetInstance().mergeCardHandler.TryMergeColumnFromTop();
     }
 }
