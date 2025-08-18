@@ -2,13 +2,11 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 [ExecuteAlways]
 public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [SerializeField] private int value = 2;
-    [SerializeField] private bool hasMoney = false;
     public TMP_Text text;
 
     private RectTransform rectTransform;
@@ -16,22 +14,19 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
 
     private int col, row;
 
-    private GridManager gridManager;
-    [SerializeField] private Image moneyIcon;
+    public GridManager gridManager;
 
     #region MonoBehavior funcs
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
         canvasGroup = GetComponent<CanvasGroup>();
-        gridManager = GridManager.GetInstance();
         UpdateText();
     }
 
     void Start()
     {
         UpdateText();
-        UpdateCardVisibility();
     }
 
     void Update()
@@ -55,12 +50,6 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         UpdateCardVisibility();
     }
 
-    public void SetHasMoney(bool newValue)
-    {
-        hasMoney = newValue;
-        UpdateCardVisibility() ;
-    }
-
     public void SetGridPosition(int c, int r)
     {
         col = c;
@@ -81,8 +70,6 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         if (text != null)
             text.text = value.ToString();
     }
-
-    public bool GetHasMoney() { return hasMoney; }
 
     #endregion
 
@@ -141,11 +128,5 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         canvasGroup.alpha = (value == 0 ? 0f : 1f);
         canvasGroup.interactable = value != 0;
         canvasGroup.blocksRaycasts = value != 0;
-
-        if (!moneyIcon) Debug.LogError("Didn't setup money icon!");
-        else
-        {
-            moneyIcon.gameObject.SetActive(hasMoney);
-        }
     }
 }
