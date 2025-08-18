@@ -41,7 +41,7 @@ public class GridManager : MonoBehaviour
         UpdateCellSpacing();
     }
 
-    void Start()
+    public void Start()
     {
         ClearCards(); // Clear Debug card prepared in design
         InitializeCards();
