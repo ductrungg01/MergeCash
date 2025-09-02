@@ -16,10 +16,10 @@ public class GridHoverDebugger : MonoBehaviour
         {
             Vector2 mousePos = Mouse.current.position.ReadValue();
 
-            int col = gridManager.GetNearestColumn(mousePos);
-            int row = gridManager.GetNearestRow(mousePos);
+            //int col = gridManager.GetNearestColumn(mousePos);
+            //int row = gridManager.GetNearestRow(mousePos);
 
-            Debug.Log($"[Hover Debug] MousePos: {mousePos}, Col: {col}, Row: {row}");
+            //Debug.Log($"[Hover Debug] MousePos: {mousePos}, Col: {col}, Row: {row}");
         }
     }
 }

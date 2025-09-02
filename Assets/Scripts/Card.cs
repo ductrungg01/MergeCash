@@ -1,30 +1,38 @@
 using UnityEngine;
 using TMPro;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 [ExecuteAlways]
-public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class Card : MonoBehaviour
 {
-    [SerializeField] private int value = 2;
-    [SerializeField] private bool hasMoney = false;
-    public TMP_Text text;
+    private static int ID_Counter = 0;
+    public int ID { get; private set; }
 
-    private RectTransform rectTransform;
+    [SerializeField] private int value = 2;
+    [SerializeField] private int money = 0;
     private CanvasGroup canvasGroup;
 
-    private int col, row;
+    [SerializeField] private TMP_Text text;
 
-    private GridManager gridManager;
     [SerializeField] private Image moneyIcon;
 
+    private Column ownerColumn;
+    private CardDragHandler draggableItem;
+    private bool isDragging = false;
+
     #region MonoBehavior funcs
+
+    private void OnValidate()
+    {
+        SetValue(value);
+        UpdateCardVisibility();
+    }
+
     private void Awake()
     {
-        rectTransform = GetComponent<RectTransform>();
+        ID = ID_Counter++;
         canvasGroup = GetComponent<CanvasGroup>();
-        gridManager = GridManager.GetInstance();
+        draggableItem = GetComponent<CardDragHandler>();
         UpdateText();
     }
 
@@ -34,11 +42,29 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         UpdateCardVisibility();
     }
 
-    void Update()
+    private Card followTarget;
+    private Vector3 offset;
+    public void SetFollow(Card target)
     {
-        if (Mouse.current.leftButton.wasPressedThisFrame)
+        followTarget = target;
+        offset = transform.position - target.transform.position;
+    }
+
+    public void ClearFollow()
+    {
+        followTarget = null;
+    }
+
+    public static void ResetIDCounter()
+    {
+        ID_Counter = 0;
+    }
+
+    private void Update()
+    {
+        if (followTarget != null)
         {
-            Debug.Log("Left mouse clicked.");
+            transform.position = followTarget.transform.position + offset;
         }
     }
     #endregion
@@ -55,26 +81,28 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         UpdateCardVisibility();
     }
 
-    public void SetHasMoney(bool newValue)
+    public void SetMoney(int newValue)
     {
-        hasMoney = newValue;
+        money = newValue;
         UpdateCardVisibility() ;
     }
 
-    public void SetGridPosition(int c, int r)
+    public void SetOwnerColumn(Column column)
     {
-        col = c;
-        row = r;
+        this.ownerColumn = column;
+        this.draggableItem.SetOwnerColumn(column);
     }
+
+    public void SetIsDragging(bool isDragging)
+    {
+        this.isDragging = isDragging;
+        canvasGroup.alpha = isDragging ? 0.6f : 1f;
+    }
+
     #endregion
 
     #region GETTERS
     public int GetValue() { return value; }
-
-    public (int, int) GetGridPosition()
-    {
-        return (col, row);
-    }
 
     private void UpdateText()
     {
@@ -82,62 +110,16 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
             text.text = value.ToString();
     }
 
-    public bool GetHasMoney() { return hasMoney; }
+    public int GetMoney() { return money; }
 
-    #endregion
+    public Column GetOwnerColumn() { return ownerColumn; }
 
-    #region DRAGGING
-    private int originalCol;
-    private Vector3 originalPosition;
-
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        if (!gridManager.IsLastCardOfColumn(this))
-        {
-            Debug.Log("This is not last card of column => do not drag");
-            eventData.pointerDrag = null; // Cancel drag
-            return;
-        }
-
-        originalCol = col; // Save the original column
-        originalPosition = rectTransform.localPosition; // Save the original position
-
-        Debug.Log($"Start drag from column: {originalCol}");
-
-        canvasGroup.alpha = 0.6f;
-        canvasGroup.blocksRaycasts = false;
-    }
-
-    public void OnDrag(PointerEventData eventData)
-    {
-        rectTransform.position = eventData.position;
-    }
-
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        canvasGroup.blocksRaycasts = true;
-
-        int targetCol = GridManager.GetInstance().GetNearestColumn(eventData.position);
-
-        if (targetCol != originalCol)
-        {
-            Card targetLastCard = gridManager.GetLastCardOfColumn(targetCol);
-            Debug.Log($"Drop to {targetCol} (last card: {targetLastCard?.GetValue()})");
-
-            Player.GetInstance().moveCardHandler.MoveCard(this, targetCol);
-        }
-        else
-        {
-            Debug.Log("Same column => don't do anything");
-        }
-
-        rectTransform.localPosition = originalPosition;
-        UpdateCardVisibility();
-    }
     #endregion
 
     void UpdateCardVisibility()
     {
+        if (canvasGroup == null) canvasGroup = GetComponent<CanvasGroup>();
+
         canvasGroup.alpha = (value == 0 ? 0f : 1f);
         canvasGroup.interactable = value != 0;
         canvasGroup.blocksRaycasts = value != 0;
@@ -145,7 +127,7 @@ public class Card : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHand
         if (!moneyIcon) Debug.LogError("Didn't setup money icon!");
         else
         {
-            moneyIcon.gameObject.SetActive(hasMoney);
+            moneyIcon.gameObject.SetActive(money > 0);
         }
     }
 }

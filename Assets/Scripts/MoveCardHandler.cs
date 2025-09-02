@@ -9,48 +9,8 @@ public class MoveCardHandler : MonoBehaviour
         gridManager = GridManager.GetInstance();
     }
 
-    public void MoveCard(Card card, int targetCol, bool isSpawnNewRowAfterMove = true)
+    public void MoveCard()
     {
-        Card targetCard = gridManager.GetLastCardOfColumn(targetCol);
-        var (oriCol, oriRow) = card.GetGridPosition();
-
-        bool mergeAnyHasMoneyCard = false;
-        if (targetCard != null)
-        {
-            if (targetCard.GetValue() == card.GetValue())
-            {
-                if (card.GetHasMoney() || targetCard.GetHasMoney()) mergeAnyHasMoneyCard = true;
-
-                int targetRow = targetCard.GetGridPosition().Item2;
-                gridManager.SetCardValueAt(targetCol, targetRow, card.GetValue() * 2);
-                if (Player.GetInstance().mergeCardHandler.TryMergeColumnFromBottom(targetCol, ref mergeAnyHasMoneyCard))
-                {
-                    // Do not swpan new row if merge column success
-                    isSpawnNewRowAfterMove = false;
-                }
-            } else
-            {
-                gridManager.SetCardValueAt(targetCol, targetCard.GetGridPosition().Item2 + 1, card.GetValue());
-            }
-            gridManager.SetCardValueAt(oriCol, oriRow, 0);
-        } else
-        {
-            gridManager.SetCardValueAt(targetCol, 0, card.GetValue());
-            gridManager.SetCardValueAt(oriCol, oriRow, 0);
-        }
-
-        // If merge any card which has money, we do not spawn new row!
-        if (mergeAnyHasMoneyCard) isSpawnNewRowAfterMove = false;
         
-        // If has empty column and maximum depth > 3, force to spawn new row!
-        if (gridManager.GetMaximumDepthOfGrid() > 3 && gridManager.HasEmptyColumn())
-        {
-            isSpawnNewRowAfterMove = true;
-        }
-
-        if (isSpawnNewRowAfterMove)
-        {
-            gridManager.SpawnNewRow();
-        }
     }
 }

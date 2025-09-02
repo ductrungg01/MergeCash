@@ -149,6 +149,8 @@ GameObject:
   - component: {fileID: 5065841982420591555}
   - component: {fileID: 7494772570602488982}
   - component: {fileID: 6324268468177827013}
+  - component: {fileID: 4739235798460051889}
+  - component: {fileID: 551479339984436664}
   m_Layer: 5
   m_Name: Card
   m_TagString: Untagged
@@ -228,7 +230,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   value: 2
-  hasMoney: 0
+  money: 0
   text: {fileID: 5281175440859973490}
   moneyIcon: {fileID: 2218565786435277186}
 --- !u!225 &6324268468177827013
@@ -243,6 +245,31 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &4739235798460051889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6743418144611442467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fddab133c31ef084a80712dcb4854f0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetColumn: {fileID: 0}
+--- !u!114 &551479339984436664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6743418144611442467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f95f3b430e81f704c8760329e9476b77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7457718619464116743
 GameObject:
   m_ObjectHideFlags: 0

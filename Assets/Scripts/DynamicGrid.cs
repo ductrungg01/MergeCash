@@ -6,8 +6,6 @@ using UnityEngine.UI;
 public class DynamicGrid : MonoBehaviour
 {
     [SerializeField] private const int COLUMN_COUNT = 4;      // Number of columns to display
-    [SerializeField] private float spacingX = 5f;      // Horizontal spacing between cells
-    [SerializeField] private float aspectRatio = 1.2f; // Height = Width * aspectRatio
 
     private GridLayoutGroup grid;
     private RectTransform rectTransform;
@@ -47,11 +45,10 @@ public class DynamicGrid : MonoBehaviour
         // Calculate cell width so that exactly 'columnCount' cells fit the container width
         float cellWidth = (rectTransform.rect.width - totalSpacing) / COLUMN_COUNT;
 
-        // Calculate cell height based on the desired aspect ratio
-        float cellHeight = cellWidth * aspectRatio;
+        float height = rectTransform.rect.height;
 
         // Apply calculated size
-        grid.cellSize = new Vector2(cellWidth, cellHeight);
+        grid.cellSize = new Vector2(cellWidth, height);
     }
 
     void OnRectTransformDimensionsChange()
