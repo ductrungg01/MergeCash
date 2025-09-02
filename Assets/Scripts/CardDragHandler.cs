@@ -4,6 +4,8 @@ using UnityEngine.EventSystems;
 
 public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    public static bool IS_DRAGGING { get; private set; } = false;
+
     private Column ownerColumn;
     private Card card;
     private RectTransform rectTransform;
@@ -20,6 +22,9 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public void OnBeginDrag(PointerEventData eventData)
     {
         //Debug.Log("Begin Drag!");
+
+        IS_DRAGGING = true;
+
         if (ownerColumn != null)
         {
             canvasGroup.blocksRaycasts = false;
@@ -38,6 +43,8 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
     public void OnEndDrag(PointerEventData eventData)
     {
         //Debug.Log("End Dragging");
+
+        IS_DRAGGING = false;
 
         canvasGroup.blocksRaycasts = true;
         var sourceColumn = ownerColumn;
@@ -60,6 +67,8 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             {
                 ownerColumn.RearrangeColumn();
             }
+
+            targetColumn.GetComponent<ColumnDropHandler>().Unhighlight();
         }
     }
 
