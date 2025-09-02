@@ -22,10 +22,10 @@ public class Column : MonoBehaviour
     [SerializeField]
     private List<CardData> debugCards = new List<CardData>()
     {
-        new CardData(128, 10),
-        new CardData(64, 0),
-        new CardData(8, 10),
-        new CardData(2, 0)
+        new CardData("128"),
+        new CardData("64"),
+        new CardData("8"),
+        new CardData("8")
     };
 
     void OnValidate()
@@ -136,17 +136,13 @@ public class Column : MonoBehaviour
     public void SetCards(List<CardData> cards)
     {
         ClearAllCards();
-        foreach (var cardInfo in cards)
+        foreach (var cardData in cards)
         {
-            int value = cardInfo.value;
-            int money = cardInfo.money;
-
             GameObject go = Instantiate(cardPrefab, transform);
             Card card = go.GetComponent<Card>();
             if (card != null)
             {
-                card.SetValue(value);
-                card.SetMoney(money);
+                card.SetCardData(cardData);
                 card.SetOwnerColumn(this);
 
                 AddCard(card);

@@ -82,9 +82,7 @@ public class GridManager : MonoBehaviour
                 {
                     rndLength--;
                     int rndCardValue = presetRandomData[Random.Range(0, presetRandomData.Count)];
-                    bool hasMoney = Random.value > 0.5f;
-                    int cardMoney = (hasMoney ? 10 : 0);
-                    datas.Add(new CardData(rndCardValue, cardMoney));
+                    datas.Add(new CardData(rndCardValue.ToString()));
                 }
                 CardDataRow row = new CardDataRow();
                 row.row = datas;

@@ -1,14 +1,15 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 [System.Serializable]
-public struct CardData
+public class CardData
 {
-    public int value;
-    public int money;
+    public string label;
+    public Sprite background;
 
-    public CardData(int value, int money)
+    public CardData(string label, Sprite background = null)
     {
-        this.value = value;
-        this.money = money;
+        this.label = label;
+        this.background = background;
     }
 }
