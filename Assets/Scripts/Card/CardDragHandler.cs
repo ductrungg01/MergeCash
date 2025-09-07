@@ -62,6 +62,8 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                     sourceColumn.RemoveCard(c);
                     targetColumn.AddCard(c);
                 }
+
+                targetColumn.TryMerge();
             }
             else
             {
@@ -69,7 +71,6 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             }
 
             targetColumn.GetComponent<ColumnDropHandler>().Unhighlight();
-            targetColumn.TryMerge();
         }
     }
 

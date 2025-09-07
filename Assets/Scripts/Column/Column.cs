@@ -198,6 +198,12 @@ public class Column : MonoBehaviour
             cards[i].SetIsDragging(true);
             cards[i].SetFollow(card);
         }
+
+        for (int i = idx;  i < cards.Count; i++)
+        {
+            cards[i].transform.SetParent(transform.root);
+            cards[i].transform.SetAsLastSibling();
+        }
     }
 
     public void StopDragging(Card card)
@@ -209,6 +215,12 @@ public class Column : MonoBehaviour
         {
             cards[i].SetIsDragging(false);
             cards[i].ClearFollow();
+        }
+
+        for (int i = idx; i < cards.Count; i++)
+        {
+            cards[i].transform.SetParent(transform);
+            cards[i].transform.SetAsLastSibling();
         }
     }
     #endregion

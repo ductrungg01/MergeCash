@@ -65,7 +65,6 @@ public class ColumnDropHandler : MonoBehaviour, IDropHandler, IPointerEnterHandl
         if (CardDragHandler.IS_DRAGGING)
         {
             //Debug.Log("Pointer move, Column ID: " + column.ID);
-            Highlight();
         }
     }
 
@@ -80,6 +79,4 @@ public class ColumnDropHandler : MonoBehaviour, IDropHandler, IPointerEnterHandl
         var color = highlightImage.color;
         highlightImage.color = new Color(color.r, color.g, color.b, 0);
     }
-
-    
 }
