@@ -69,6 +69,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
             }
 
             targetColumn.GetComponent<ColumnDropHandler>().Unhighlight();
+            targetColumn.TryMerge();
         }
     }
 

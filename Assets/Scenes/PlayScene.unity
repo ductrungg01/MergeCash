@@ -270,15 +270,15 @@ PrefabInstance:
     - target: {fileID: 3517610191735790258, guid: 269a28cd83d9ce04db4095604848a5ae, type: 3}
       propertyPath: 'cards.Array.data[0]'
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 738737220}
     - target: {fileID: 3517610191735790258, guid: 269a28cd83d9ce04db4095604848a5ae, type: 3}
       propertyPath: 'cards.Array.data[1]'
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1535229979}
     - target: {fileID: 3517610191735790258, guid: 269a28cd83d9ce04db4095604848a5ae, type: 3}
       propertyPath: 'cards.Array.data[2]'
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 724170869}
     - target: {fileID: 3517610191735790258, guid: 269a28cd83d9ce04db4095604848a5ae, type: 3}
       propertyPath: 'cards.Array.data[3]'
       value: 
@@ -461,15 +461,15 @@ PrefabInstance:
     - target: {fileID: 3517610191735790258, guid: 269a28cd83d9ce04db4095604848a5ae, type: 3}
       propertyPath: 'cards.Array.data[0]'
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1385316324}
     - target: {fileID: 3517610191735790258, guid: 269a28cd83d9ce04db4095604848a5ae, type: 3}
       propertyPath: 'cards.Array.data[1]'
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 694074001}
     - target: {fileID: 3517610191735790258, guid: 269a28cd83d9ce04db4095604848a5ae, type: 3}
       propertyPath: 'cards.Array.data[2]'
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1655787073}
     - target: {fileID: 3517610191735790258, guid: 269a28cd83d9ce04db4095604848a5ae, type: 3}
       propertyPath: 'cards.Array.data[3]'
       value: 
@@ -1516,19 +1516,19 @@ PrefabInstance:
     - target: {fileID: 3517610191735790258, guid: 269a28cd83d9ce04db4095604848a5ae, type: 3}
       propertyPath: 'cards.Array.data[0]'
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1589522100}
     - target: {fileID: 3517610191735790258, guid: 269a28cd83d9ce04db4095604848a5ae, type: 3}
       propertyPath: 'cards.Array.data[1]'
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 380300626}
     - target: {fileID: 3517610191735790258, guid: 269a28cd83d9ce04db4095604848a5ae, type: 3}
       propertyPath: 'cards.Array.data[2]'
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1831259207}
     - target: {fileID: 3517610191735790258, guid: 269a28cd83d9ce04db4095604848a5ae, type: 3}
       propertyPath: 'cards.Array.data[3]'
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1519392378}
     - target: {fileID: 3517610191735790258, guid: 269a28cd83d9ce04db4095604848a5ae, type: 3}
       propertyPath: cardValues.Array.size
       value: 0
@@ -2776,8 +2776,6 @@ GameObject:
   m_Component:
   - component: {fileID: 913529025}
   - component: {fileID: 913529024}
-  - component: {fileID: 913529023}
-  - component: {fileID: 913529022}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2785,30 +2783,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &913529022
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 913529021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 892a7d1d32f40b742b01e24481bb6095, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &913529023
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 913529021}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1e8f299a14299e4ab4aac0e26e8af4e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &913529024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2821,8 +2795,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c4352f31aca39f46b78b66868bf1af6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveCardHandler: {fileID: 0}
-  mergeCardHandler: {fileID: 0}
 --- !u!4 &913529025
 Transform:
   m_ObjectHideFlags: 0
@@ -4727,15 +4699,15 @@ PrefabInstance:
     - target: {fileID: 3517610191735790258, guid: 269a28cd83d9ce04db4095604848a5ae, type: 3}
       propertyPath: 'cards.Array.data[0]'
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 385798314}
     - target: {fileID: 3517610191735790258, guid: 269a28cd83d9ce04db4095604848a5ae, type: 3}
       propertyPath: 'cards.Array.data[1]'
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1613556531}
     - target: {fileID: 3517610191735790258, guid: 269a28cd83d9ce04db4095604848a5ae, type: 3}
       propertyPath: 'cards.Array.data[2]'
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1198542250}
     - target: {fileID: 3517610191735790258, guid: 269a28cd83d9ce04db4095604848a5ae, type: 3}
       propertyPath: 'cards.Array.data[3]'
       value: 

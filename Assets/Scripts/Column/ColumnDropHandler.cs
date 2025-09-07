@@ -31,7 +31,7 @@ public class ColumnDropHandler : MonoBehaviour, IDropHandler, IPointerEnterHandl
     {
         if (CardDragHandler.IS_DRAGGING)
         {
-            Debug.Log("Pointer enter, Column ID: " + column.ID);
+            //Debug.Log("Pointer enter, Column ID: " + column.ID);
             Highlight();
         }
     }
@@ -40,7 +40,7 @@ public class ColumnDropHandler : MonoBehaviour, IDropHandler, IPointerEnterHandl
     {
         if (CardDragHandler.IS_DRAGGING)
         {
-            Debug.Log("Pointer exit, Column ID: " + column.ID);
+            //Debug.Log("Pointer exit, Column ID: " + column.ID);
             Unhighlight();
         }
     }
@@ -49,14 +49,14 @@ public class ColumnDropHandler : MonoBehaviour, IDropHandler, IPointerEnterHandl
     {
         if (CardDragHandler.IS_DRAGGING)
         {
-            Debug.Log("Pointer click, Column ID: " + column.ID);
+            //Debug.Log("Pointer click, Column ID: " + column.ID);
             Highlight();
         }
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        Debug.Log("Pointer up, Column ID: " + column.ID);
+        //Debug.Log("Pointer up, Column ID: " + column.ID);
         Unhighlight();
     }
 

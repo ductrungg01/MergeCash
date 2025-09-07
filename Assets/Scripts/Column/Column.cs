@@ -15,7 +15,6 @@ public class Column : MonoBehaviour
     private const int MAX_CARDS = 10;
 
     [Header("Data")]
-    [SerializeField] private List<int> cardValues = new List<int>(); 
     [SerializeField] private List<Card> cards = new List<Card>();
 
     [Header("Debug")]
@@ -28,6 +27,7 @@ public class Column : MonoBehaviour
         new CardData("8")
     };
 
+    #region Monobehavior funcs
     void OnValidate()
     {
         RefreshCardList();
@@ -38,6 +38,46 @@ public class Column : MonoBehaviour
     {
         ID = ID_Counter++;
     }
+    #endregion
+
+    #region Setters
+    public void SetCards(List<CardData> cards)
+    {
+        ClearAllCards();
+        foreach (var cardData in cards)
+        {
+            GameObject go = Instantiate(cardPrefab, transform);
+            Card card = go.GetComponent<Card>();
+            if (card != null)
+            {
+                card.SetCardData(cardData);
+                card.SetOwnerColumn(this);
+
+                AddCard(card);
+            }
+        }
+    }
+
+    #endregion
+
+    #region Getters
+    public Card GetCard(int index)
+    {
+        if (index < 0 || index >= cards.Count) return null;
+        return cards[index];
+    }
+
+    public List<Card> GetCards() { return cards; }
+
+    public List<Card> GetCardsBelow(Card card)
+    {
+        int index = cards.IndexOf(card);
+        if (index == -1) return new List<Card>();
+        return cards.GetRange(index, cards.Count - index);
+    }
+
+
+    #endregion
 
     void Reset()
     {
@@ -95,9 +135,8 @@ public class Column : MonoBehaviour
         var card = cards[index];
         card.SetOwnerColumn(null);
         cards.RemoveAt(index);
-        cardValues.RemoveAt(index);
 
-        Destroy(card);
+        Destroy(card.gameObject);
 
         RearrangeColumn();
     }
@@ -125,7 +164,6 @@ public class Column : MonoBehaviour
             DestroyImmediate(card.gameObject);
         }
         cards.Clear();
-        cardValues.Clear();
     }
 
     public void GenerateCardFromDebugCards()
@@ -133,39 +171,23 @@ public class Column : MonoBehaviour
         SetCards(debugCards);
     }
 
-    public void SetCards(List<CardData> cards)
-    {
-        ClearAllCards();
-        foreach (var cardData in cards)
-        {
-            GameObject go = Instantiate(cardPrefab, transform);
-            Card card = go.GetComponent<Card>();
-            if (card != null)
-            {
-                card.SetCardData(cardData);
-                card.SetOwnerColumn(this);
-
-                AddCard(card);
-            }
-        }
-    }
-
     public int CardCount()
     {
         return cards.Count;
     }
 
-    public Card GetCard(int index)
+    public bool TryMerge()
     {
-        if (index < 0 || index >= cards.Count) return null;
-        return cards[index];
+        ColumnMergeCardHandler mergeHandler = gameObject.GetComponent<ColumnMergeCardHandler>();
+        if (mergeHandler != null )
+        {
+            return mergeHandler.TryMerge();
+        }
+
+        return false;
     }
 
-    public List<int> GetCardValues()
-    {
-        return cardValues;
-    }
-
+    #region Dragging
     public void StartDragging(Card card)
     {
         int idx = cards.IndexOf(card);
@@ -189,11 +211,5 @@ public class Column : MonoBehaviour
             cards[i].ClearFollow();
         }
     }
-
-    public List<Card> GetCardsBelow(Card card)
-    {
-        int index = cards.IndexOf(card);
-        if (index == -1) return new List<Card>();
-        return cards.GetRange(index, cards.Count - index); 
-    }
+    #endregion
 }

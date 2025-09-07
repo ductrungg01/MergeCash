@@ -9,6 +9,8 @@ public class Card : MonoBehaviour
     public int ID { get; private set; }
 
     [SerializeField] private string label = "2";
+    public string Label => label;
+
     [SerializeField] private int money = 0;
     [SerializeField] private Image backgroundImage = null;
     [SerializeField, Range(0, 1)] private float rateHasMoney = 0.5f;
@@ -168,6 +170,15 @@ public class Card : MonoBehaviour
         else
         {
             moneyIcon.gameObject.SetActive(money > 0);
+        }
+    }
+
+    public void UpdateNextLabel()
+    {
+        var nextCardData = CardDataManager.Instance.GetNextCardData(label);
+        if (nextCardData != null)
+        {
+            SetCardData(nextCardData);
         }
     }
 }

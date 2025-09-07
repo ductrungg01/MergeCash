@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6517092388965481693}
   - component: {fileID: 2155431308467661973}
   - component: {fileID: 2410732546424553059}
+  - component: {fileID: 1294693055688244968}
   m_Layer: 5
   m_Name: Column
   m_TagString: Untagged
@@ -56,14 +57,14 @@ MonoBehaviour:
   cardValues: 02000000
   cards: []
   debugCards:
-  - value: 128
-    money: 10
-  - value: 64
-    money: 0
-  - value: 8
-    money: 10
-  - value: 2
-    money: 0
+  - label: 128
+    background: {fileID: 0}
+  - label: 64
+    background: {fileID: 0}
+  - label: 8
+    background: {fileID: 0}
+  - label: 8
+    background: {fileID: 0}
 --- !u!222 &6517092388965481693
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -116,3 +117,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   highlightImage: {fileID: 2155431308467661973}
   highlightAlpha: 0.318
+--- !u!114 &1294693055688244968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6058952871829085755}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 892a7d1d32f40b742b01e24481bb6095, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
