@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Linq;
+using System.Collections.Generic;
 
 public class CardDataManager : MonoBehaviour
 {
@@ -21,7 +22,8 @@ public class CardDataManager : MonoBehaviour
 
         cardDataList = Resources.Load<CardDataList>("CardDataList");
     }
-        
+
+    #region Getters
     public Sprite GetBackgroundByLabel(string label)
     {
         if (cardDataList == null) return null;
@@ -44,4 +46,16 @@ public class CardDataManager : MonoBehaviour
         return null;
     }
 
+    public List<CardData> GetCardList()
+    {
+        return cardDataList != null ? cardDataList.cards : null;
+    }
+
+    public int GetIndexByLabel(string label)
+    {
+        // Return the index of the label in the configured CardDataList order
+        if (cardDataList == null || cardDataList.cards == null) return -1;
+        return cardDataList.cards.FindIndex(c => c.label == label);
+    }
+    #endregion
 }

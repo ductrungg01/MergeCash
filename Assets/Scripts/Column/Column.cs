@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 [ExecuteAlways]
@@ -56,7 +58,7 @@ public class Column : MonoBehaviour
                 card.SetCardData(cardData);
                 card.SetOwnerColumn(this);
 
-                AddCard(card);
+                AddCardFromBottom(card);
             }
         }
     }
@@ -79,7 +81,47 @@ public class Column : MonoBehaviour
         return cards.GetRange(index, cards.Count - index);
     }
 
+    public Card GetMaxCard()
+    {
+        // Return the card that has the highest rank (by label index in CardDataList)
+        if (cards == null || cards.Count == 0) return null;
 
+        Card best = null;
+        int bestIdx = -1;
+
+        for (int i = 0; i < cards.Count; i++)
+        {
+            string label = cards[i].Label; 
+            int idx = CardDataManager.Instance.GetIndexByLabel(label);
+            if (idx > bestIdx)
+            {
+                bestIdx = idx;
+                best = cards[i];
+            }
+        }
+
+        return best;
+    }
+
+    public Card GetMinCard()
+    {
+        if (cards == null || cards.Count == 0) return null;
+
+        Card best = null;
+        int bestIdx = int.MaxValue;
+
+        foreach (var card in cards)
+        {
+            int idx = CardDataManager.Instance.GetIndexByLabel(card.Label);
+            if (idx >= 0 && idx < bestIdx)
+            {
+                bestIdx = idx;
+                best = card;
+            }
+        }
+
+        return best;
+    }
     #endregion
 
     void Reset()
@@ -105,7 +147,40 @@ public class Column : MonoBehaviour
         }
     }
 
-    public void AddCard(Card card)
+    public void AddCardFromTop(CardData cardData)
+    {
+        GameObject go = Instantiate(cardPrefab, transform);
+        Card card = go.GetComponent<Card>();
+        if (card != null)
+        {
+            card.SetCardData(cardData);
+            card.SetOwnerColumn(this);
+        }
+
+        cards.Insert(0, card);
+
+        go.transform.SetAsFirstSibling();
+        RectTransform rectTransform = go.GetComponent<RectTransform>();
+        SetupAnchor(rectTransform, new Vector2(0, -CardOffsetY));
+
+        MoveAllCardDown(0.25f);
+    }
+
+    private void MoveAllCardDown(float duration)
+    {
+        for (int i = 0; i < cards.Count; i++)
+        {
+            RectTransform rt = cards[i].GetComponent<RectTransform>();
+
+            // Calculate the "correct" anchored position based on index
+            Vector2 targetPos = new Vector2(0, i * cardOffsetY);
+
+            // Animate from current position to target
+            rt.DOAnchorPos(targetPos, duration).SetEase(Ease.OutQuad);
+        }
+    }
+
+    public void AddCardFromBottom(Card card)
     {
         if (cards.Count >= MAX_CARDS)
         {
@@ -151,15 +226,20 @@ public class Column : MonoBehaviour
         }
     }
 
+    private void SetupAnchor(RectTransform rt, Vector2 anchorPos)
+    {
+        rt.anchorMin = new Vector2(0.5f, 1f);
+        rt.anchorMax = new Vector2(0.5f, 1f);
+        rt.pivot = new Vector2(0.5f, 1f);
+        rt.anchoredPosition = anchorPos;
+    }
+
     public void RearrangeColumn()
     {
         for (int i = 0; i < cards.Count; i++)
         {
             RectTransform rt = cards[i].GetComponent<RectTransform>();
-            rt.anchorMin = new Vector2(0.5f, 1f);
-            rt.anchorMax = new Vector2(0.5f, 1f);
-            rt.pivot = new Vector2(0.5f, 1f);
-            rt.anchoredPosition = new Vector2(0, i * cardOffsetY);
+            SetupAnchor(rt, new Vector2(0, i * cardOffsetY));
 
             // Need calculate card size dynamically later
             rt.sizeDelta = new Vector2(244f, 294f);
@@ -191,12 +271,22 @@ public class Column : MonoBehaviour
         ColumnMergeCardHandler mergeHandler = GetComponent<ColumnMergeCardHandler>();
         if (mergeHandler != null)
         {
-            // Forward coroutine from mergeHandler
             yield return StartCoroutine(mergeHandler.TryMergeCoroutine());
-        }
-        else
-        {
-            yield break;
+
+            if (mergeHandler.WasMerged)
+            {
+                Debug.Log("Column had at least one merge");
+            }
+            else
+            {
+                Debug.Log("No merge happened");
+            }
+
+            if (GridManager.Instance.ShouldSpawnNewRow(mergeHandler.WasMerged))
+            {
+                GridManager.Instance.SpawnNewRow();
+            }
+           
         }
     }
 

@@ -60,7 +60,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                 foreach (var c in movingCards)
                 {
                     sourceColumn.RemoveCard(c);
-                    targetColumn.AddCard(c);
+                    targetColumn.AddCardFromBottom(c);
                 }
 
                 StartCoroutine(targetColumn.TryMerge());

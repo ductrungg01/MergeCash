@@ -24,17 +24,20 @@ public class GridManager : MonoBehaviour
     [Tooltip("List of starting value of each column")]
     [SerializeField] List<CardDataRow> startingCardDatas = new List<CardDataRow> ();
 
-    [SerializeField] private List<int> presetRandomData = new List<int>() { 2, 4, 8, 16, 32 };
+    [SerializeField] private List<int> presetRandomData = new List<int>() { 2, 4, 8, 16, 32, 64 };
 
     private List<Column> columns = new List<Column> ();
 
 
+    #region Singleton
     public static GridManager Instance { get; private set; }
     public static GridManager GetInstance()
     {
         return Instance;
     }
+    #endregion
 
+    #region Monobehavior funcs
     private void Awake()
     {
         // Singleton pattern
@@ -53,6 +56,7 @@ public class GridManager : MonoBehaviour
         Column.ResetIDCounter();
         GenerateStartingColumn();
     }
+    #endregion
 
     void RemoveAllColumns()
     {
@@ -81,8 +85,25 @@ public class GridManager : MonoBehaviour
                 while (rndLength > 0) 
                 {
                     rndLength--;
-                    int rndCardValue = presetRandomData[Random.Range(0, presetRandomData.Count)];
-                    datas.Add(new CardData(rndCardValue.ToString()));
+
+                    while (true)
+                    {
+                        int rndCardValue = presetRandomData[Random.Range(0, presetRandomData.Count)];
+
+                        if (datas.Count == 0)
+                        {
+                            datas.Add(new CardData(rndCardValue.ToString()));
+                            break;
+                        } else
+                        {
+                            string top = datas[datas.Count - 1].label;
+                            if (rndCardValue.ToString() != top)
+                            {
+                                datas.Add(new CardData(rndCardValue.ToString()));
+                                break;
+                            }
+                        }
+                    }
                 }
                 CardDataRow row = new CardDataRow();
                 row.row = datas;
@@ -97,4 +118,123 @@ public class GridManager : MonoBehaviour
             columns[i].SetCards(startingDatas[i].row);
         }
     }
+
+
+    private const float SPAWN_RATIO_MAX = 0.5f; // 50% từ max, 50% từ min
+
+    public CardData GetRandomCard(Column column)
+    {
+        var cardList = CardDataManager.Instance.GetCardList();
+        if (cardList == null || cardList.Count == 0) return null;
+
+        string maxLabel = GetMaxLabelOnBoard();
+        string minLabel = GetMinLabelOnBoard();
+
+        int maxIndex = cardList.FindIndex(c => c.label == maxLabel);
+        int minIndex = cardList.FindIndex(c => c.label == minLabel);
+
+        if (maxIndex < 0) maxIndex = 0;
+        if (minIndex < 0) minIndex = 0;
+
+        List<CardData> candidates = new List<CardData>();
+
+        // Random chọn hướng: max hay min
+        if (Random.value < SPAWN_RATIO_MAX)
+        {
+            // ===== Spawn related to MAX =====
+            int start = Mathf.Max(0, maxIndex - 4); // max/16
+            int end = Mathf.Max(0, maxIndex - 1); // max/2
+
+            for (int i = start; i <= end; i++)
+            {
+                var c = cardList[i];
+                var topCard = column.GetCard(0);
+                if (topCard == null || c.label != topCard.Label)
+                    candidates.Add(c);
+            }
+        }
+        else
+        {
+            // ===== Spawn related to MIN =====
+            int start = minIndex;
+            int end = Mathf.Min(cardList.Count - 1, minIndex + 2); // [min, min * 4]
+
+            for (int i = start; i <= end; i++)
+            {
+                var c = cardList[i];
+                var topCard = column.GetCard(0);
+                if (topCard == null || c.label != topCard.Label)
+                    candidates.Add(c);
+            }
+        }
+
+        if (candidates.Count == 0)
+        {
+            int fallbackIdx = Mathf.Clamp(maxIndex, 0, cardList.Count - 1);
+            return cardList[fallbackIdx];
+        }
+
+        return candidates[Random.Range(0, candidates.Count)];
+    }
+
+
+    public void SpawnNewRow()
+    {
+        foreach (var column in columns)
+        {
+            column.AddCardFromTop(GetRandomCard(column));
+        }
+    }
+
+    #region Getters
+    public bool ShouldSpawnNewRow(bool wasMerge)
+    {
+        return !wasMerge;
+    }
+
+    public string GetMaxLabelOnBoard()
+    {
+        // Return the label with the highest rank across all columns
+        string maxLabel = null;
+        int maxIdx = -1;
+
+        foreach (var column in columns) 
+        {
+            var maxCard = column.GetMaxCard();
+            if (maxCard == null) continue;
+
+            string label = maxCard.Label;
+            int idx = CardDataManager.Instance.GetIndexByLabel(label);
+
+            if (idx > maxIdx)
+            {
+                maxIdx = idx;
+                maxLabel = label;
+            }
+        }
+
+        return maxLabel;
+    }
+
+    public string GetMinLabelOnBoard()
+    {
+        string minLabel = null;
+        int minIdx = int.MaxValue;
+
+        foreach (var column in columns)
+        {
+            var minCard = column.GetMinCard();
+            if (minCard == null) continue;
+
+            int idx = CardDataManager.Instance.GetIndexByLabel(minCard.Label);
+            if (idx >= 0 && idx < minIdx)
+            {
+                minIdx = idx;
+                minLabel = minCard.Label;
+            }
+        }
+
+        return minLabel;
+    }
+    #endregion
 }

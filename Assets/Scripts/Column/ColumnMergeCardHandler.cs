@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ColumnMergeCardHandler : MonoBehaviour
 {
+    public bool WasMerged { get; private set; } = false;
+
     private Column column;
 
     private void Awake()
@@ -40,11 +42,12 @@ public class ColumnMergeCardHandler : MonoBehaviour
 
     public IEnumerator TryMergeCoroutine()
     {
-        bool merged = false;
+        Debug.Log("Try Merge");
+        WasMerged = false;
 
         while (CanMerge())
         {
-            merged  = true;
+            WasMerged = true;
 
             int index = GetMergeIndex();
 
@@ -54,9 +57,6 @@ public class ColumnMergeCardHandler : MonoBehaviour
             {
                 // Remove the card without rearrange
                 column.RemoveCard(index, false);
-
-                // Rearrange after remove
-                //column.RearrangeColumn();
 
                 // Animate merge effect on previous card
                 Card prevCard = column.GetCard(index - 1);
@@ -73,8 +73,7 @@ public class ColumnMergeCardHandler : MonoBehaviour
             yield return new WaitUntil(() => done);
         }
 
-        Debug.Log("Merge finished!");
-        //return merged;
+        Debug.Log("Merge finished!, Was Merged: " + WasMerged);
     }
 
     private void MoveCardsUpFromIndex(int index, float duration, TweenCallback onComplete)
