@@ -1,3 +1,5 @@
+using DG.Tweening;
+using System.Collections;
 using UnityEngine;
 
 public class ColumnMergeCardHandler : MonoBehaviour
@@ -36,7 +38,7 @@ public class ColumnMergeCardHandler : MonoBehaviour
         return -1;
     }
 
-    public bool TryMerge()
+    public IEnumerator TryMergeCoroutine()
     {
         bool merged = false;
 
@@ -46,17 +48,57 @@ public class ColumnMergeCardHandler : MonoBehaviour
 
             int index = GetMergeIndex();
 
-            // Step 1. update next label of previous card
-            Card prevCard = column.GetCard(index - 1);
-            if (prevCard != null)
-            {
-                prevCard.UpdateNextLabel();
-            }
+            bool done = false;
 
-            // Step 2. remove card and rearrange
-            column.RemoveCard(index);
+            MoveCardsUpFromIndex(index, 0.25f, () =>
+            {
+                // Remove the card without rearrange
+                column.RemoveCard(index, false);
+
+                // Rearrange after remove
+                //column.RearrangeColumn();
+
+                // Animate merge effect on previous card
+                Card prevCard = column.GetCard(index - 1);
+                if (prevCard != null)
+                {
+                    prevCard.UpdateNextLabel();
+                    AnimateMerge(prevCard, 0.15f);
+                }
+
+                done = true;
+            });
+
+            // Wait until tween finishes
+            yield return new WaitUntil(() => done);
         }
 
-        return merged;
+        Debug.Log("Merge finished!");
+        //return merged;
+    }
+
+    private void MoveCardsUpFromIndex(int index, float duration, TweenCallback onComplete)
+    {
+        // Move all cards below the removed card
+        for (int i = index; i < column.CardCount(); i++)
+        {
+            RectTransform rt = column.GetCard(i).GetComponent<RectTransform>();
+            Vector2 target = rt.anchoredPosition - new Vector2(0, column.CardOffsetY);
+
+            rt.DOAnchorPos(target, duration).SetEase(Ease.OutQuad);
+        }
+
+        // Run callback after duration
+        DOVirtual.DelayedCall(duration, onComplete);
+    }
+
+    private void AnimateMerge(Card card, float duration)
+    {
+        Vector3 baseScale = card.transform.localScale;
+        Vector3 targetScale = baseScale * 1.1f;
+
+        card.transform.DOScale(targetScale, duration)
+            .SetLoops(2, LoopType.Yoyo)
+            .OnComplete(() => card.transform.localScale = baseScale);
     }
 }

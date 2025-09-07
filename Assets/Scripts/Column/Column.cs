@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteAlways]
@@ -10,6 +11,8 @@ public class Column : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField] private float cardOffsetY = -120f;
+    public float CardOffsetY => cardOffsetY;
+
     [SerializeField] private GameObject cardPrefab;
 
     private const int MAX_CARDS = 10;
@@ -118,17 +121,21 @@ public class Column : MonoBehaviour
         RearrangeColumn();
     }
 
-    public void RemoveCard(Card card)
+    public void RemoveCard(Card card, bool rearrangeAfterRemove = true)
     {
         if (cards.Contains(card))
         {
             card.SetOwnerColumn(null);
             cards.Remove(card);
-            RearrangeColumn();
+
+            if (rearrangeAfterRemove)
+            {
+                RearrangeColumn();
+            }
         }
     }
 
-    public void RemoveCard(int index)
+    public void RemoveCard(int index, bool rearrangeAfterRemove = true)
     {
         if (index < 0 || index >= cards.Count) return;
 
@@ -138,7 +145,10 @@ public class Column : MonoBehaviour
 
         Destroy(card.gameObject);
 
-        RearrangeColumn();
+        if (rearrangeAfterRemove)
+        {
+            RearrangeColumn();
+        }
     }
 
     public void RearrangeColumn()
@@ -176,16 +186,20 @@ public class Column : MonoBehaviour
         return cards.Count;
     }
 
-    public bool TryMerge()
+    public IEnumerator TryMerge()
     {
-        ColumnMergeCardHandler mergeHandler = gameObject.GetComponent<ColumnMergeCardHandler>();
-        if (mergeHandler != null )
+        ColumnMergeCardHandler mergeHandler = GetComponent<ColumnMergeCardHandler>();
+        if (mergeHandler != null)
         {
-            return mergeHandler.TryMerge();
+            // Forward coroutine from mergeHandler
+            yield return StartCoroutine(mergeHandler.TryMergeCoroutine());
         }
-
-        return false;
+        else
+        {
+            yield break;
+        }
     }
+
 
     #region Dragging
     public void StartDragging(Card card)

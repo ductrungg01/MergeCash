@@ -63,7 +63,7 @@ public class CardDragHandler : MonoBehaviour, IBeginDragHandler, IDragHandler, I
                     targetColumn.AddCard(c);
                 }
 
-                targetColumn.TryMerge();
+                StartCoroutine(targetColumn.TryMerge());
             }
             else
             {
