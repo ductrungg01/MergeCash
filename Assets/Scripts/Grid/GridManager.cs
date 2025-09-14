@@ -47,6 +47,7 @@ public class GridManager : MonoBehaviour
             return;
         }
         Instance = this;
+        UIManager.Instance.ShowLoading(true);
     }
 
     private void Start()
@@ -55,6 +56,7 @@ public class GridManager : MonoBehaviour
         Card.ResetIDCounter();
         Column.ResetIDCounter();
         GenerateStartingColumn();
+        UIManager.Instance.ShowLoading(false);
     }
     #endregion
 
@@ -119,9 +121,27 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    public void SpawnNewRow()
+    {
+        foreach (var column in columns)
+        {
+            column.AddCardFromTop(GetRandomCard(column));
+        }
+    }
 
-    private const float SPAWN_RATIO_MAX = 0.5f; // 50% từ max, 50% từ min
+    public void RemoveAllLastCard()
+    {
+        foreach (var column in columns)
+        {
+            if (column.CardCount()  > 0)
+            {
+                column.RemoveCard(column.CardCount() - 1, false);
+            }
+        }
+    }
 
+    #region Getters
+    private const float SPAWN_RATIO_MAX = 0.3f; // 30% for max, 70% for min
     public CardData GetRandomCard(Column column)
     {
         var cardList = CardDataManager.Instance.GetCardList();
@@ -138,7 +158,7 @@ public class GridManager : MonoBehaviour
 
         List<CardData> candidates = new List<CardData>();
 
-        // Random chọn hướng: max hay min
+        // Random: max or min
         if (Random.value < SPAWN_RATIO_MAX)
         {
             // ===== Spawn related to MAX =====
@@ -156,7 +176,7 @@ public class GridManager : MonoBehaviour
         else
         {
             // ===== Spawn related to MIN =====
-            int start = minIndex;
+            int start = Mathf.Max(0, minIndex - 2);
             int end = Mathf.Min(cardList.Count - 1, minIndex + 2); // [min, min * 4]
 
             for (int i = start; i <= end; i++)
@@ -177,19 +197,21 @@ public class GridManager : MonoBehaviour
         return candidates[Random.Range(0, candidates.Count)];
     }
 
-
-    public void SpawnNewRow()
-    {
-        foreach (var column in columns)
-        {
-            column.AddCardFromTop(GetRandomCard(column));
-        }
-    }
-
-    #region Getters
     public bool ShouldSpawnNewRow(bool wasMerge)
     {
-        return !wasMerge;
+        Debug.Log($"[ShouldSpawnNewRow] WasMerge={wasMerge}");
+        if (wasMerge)
+        {
+            int emptycolumn = CountEmptyColumn();
+            int maxDepth = GetMaxDepth();
+
+            Debug.Log($"[ShouldSpawnNewRow] MaxDepth={maxDepth}, MaxRows={MAX_ROWS}");
+            if (emptycolumn == 1 && maxDepth <= MAX_ROWS / 2) return true;
+            if (emptycolumn > 1 && maxDepth <= 2 * MAX_ROWS / 3) return true;
+            return false;
+        }
+
+        return true;
     }
 
     public string GetMaxLabelOnBoard()
@@ -235,6 +257,36 @@ public class GridManager : MonoBehaviour
         }
 
         return minLabel;
+    }
+
+    private int GetMaxDepth()
+    {
+        int maxDepth = 0;  
+        foreach (var column in columns)
+        {
+            maxDepth = Mathf.Max(maxDepth, column.GetCards().Count);
+        }
+        return maxDepth;
+    }
+
+    private int CountEmptyColumn()
+    {
+        int count = 0;
+        foreach(var column in columns)
+        {
+            if (column.GetCards().Count == 0) count++;
+        }
+        return count;
+    }
+
+    public bool IsGridOverCapacity()
+    {
+        foreach (var column in columns)
+        {
+            if (column.GetCards().Count > MAX_ROWS) return true;
+        }
+
+        return false;
     }
     #endregion
 }

@@ -82,9 +82,12 @@ public class ColumnMergeCardHandler : MonoBehaviour
         for (int i = index; i < column.CardCount(); i++)
         {
             RectTransform rt = column.GetCard(i).GetComponent<RectTransform>();
-            Vector2 target = rt.anchoredPosition - new Vector2(0, column.CardOffsetY);
+            if (rt != null)
+            {
+                Vector2 target = rt.anchoredPosition - new Vector2(0, column.CardOffsetY);
 
-            rt.DOAnchorPos(target, duration).SetEase(Ease.OutQuad);
+                rt.DOAnchorPos(target, duration).SetEase(Ease.OutQuad);
+            }
         }
 
         // Run callback after duration

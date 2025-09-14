@@ -32,7 +32,7 @@ MonoBehaviour:
   - label: 512
     background: {fileID: -4705489980700376580, guid: 2a9d730521da7284e9411dff95209c9f, type: 3}
   - label: 1024
-    background: {fileID: -4705489980700376580, guid: 2a9d730521da7284e9411dff95209c9f, type: 3}
+    background: {fileID: -7053636658306557741, guid: 0df5c84d856e8a145aeabf9655eb2617, type: 3}
   - label: 2048
     background: {fileID: -1397027362505083134, guid: 10868dea22d1e2a4d839ee2f7dd60cda, type: 3}
   - label: 4096

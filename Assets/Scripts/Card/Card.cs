@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using DG.Tweening;
 
 [ExecuteAlways]
 public class Card : MonoBehaviour
@@ -64,30 +65,17 @@ public class Card : MonoBehaviour
         UpdateCardVisibility();
     }
 
-    private Card followTarget;
-    private Vector3 offset;
-    public void SetFollow(Card target)
-    {
-        followTarget = target;
-        offset = transform.position - target.transform.position;
-    }
-
-    public void ClearFollow()
-    {
-        followTarget = null;
-    }
-
-    public static void ResetIDCounter()
-    {
-        ID_Counter = 0;
-    }
-
     private void Update()
     {
         if (followTarget != null)
         {
             transform.position = followTarget.transform.position + offset;
         }
+    }
+
+    void OnDestroy()
+    {
+        transform.DOKill(); 
     }
     #endregion
 
@@ -180,5 +168,23 @@ public class Card : MonoBehaviour
         {
             SetCardData(nextCardData);
         }
+    }
+
+    private Card followTarget;
+    private Vector3 offset;
+    public void SetFollow(Card target)
+    {
+        followTarget = target;
+        offset = transform.position - target.transform.position;
+    }
+
+    public void ClearFollow()
+    {
+        followTarget = null;
+    }
+
+    public static void ResetIDCounter()
+    {
+        ID_Counter = 0;
     }
 }

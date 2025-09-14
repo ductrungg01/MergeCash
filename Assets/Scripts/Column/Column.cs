@@ -172,11 +172,14 @@ public class Column : MonoBehaviour
         {
             RectTransform rt = cards[i].GetComponent<RectTransform>();
 
-            // Calculate the "correct" anchored position based on index
-            Vector2 targetPos = new Vector2(0, i * cardOffsetY);
+            if (rt != null)
+            {
+                // Calculate the "correct" anchored position based on index
+                Vector2 targetPos = new Vector2(0, i * cardOffsetY);
 
-            // Animate from current position to target
-            rt.DOAnchorPos(targetPos, duration).SetEase(Ease.OutQuad);
+                // Animate from current position to target
+                rt.DOAnchorPos(targetPos, duration).SetEase(Ease.OutQuad);
+            }
         }
     }
 
@@ -273,20 +276,42 @@ public class Column : MonoBehaviour
         {
             yield return StartCoroutine(mergeHandler.TryMergeCoroutine());
 
-            if (mergeHandler.WasMerged)
+            try
             {
-                Debug.Log("Column had at least one merge");
+                if (mergeHandler.WasMerged)
+                {
+                    Debug.Log("Column had at least one merge");
+                }
+                else
+                {
+                    Debug.Log("No merge happened");
+                }
+
+                var player = Player.Instance;
+
+                if (player.IsGameOver())
+                {
+                    Player.Instance.ProcessGameOver();
+                }
+                else
+                {
+                    if (GridManager.Instance.ShouldSpawnNewRow(mergeHandler.WasMerged))
+                    {
+                        GridManager.Instance.SpawnNewRow();
+                    }
+
+                    if (player.IsGameOver())
+                    {
+                        Player.Instance.ProcessGameOver();
+                    }
+                }
             }
-            else
+            catch (System.Exception e)
             {
-                Debug.Log("No merge happened");
+                Debug.LogError("Exception after merge coroutine: " + e);
             }
 
-            if (GridManager.Instance.ShouldSpawnNewRow(mergeHandler.WasMerged))
-            {
-                GridManager.Instance.SpawnNewRow();
-            }
-           
+
         }
     }
 
