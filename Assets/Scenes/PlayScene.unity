@@ -1432,7 +1432,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 475217548122662231, guid: ceb5bb1f6728f3b40a813e437ae4d5d4, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ProcessSwap
+      value: ProcessSuffle
       objectReference: {fileID: 0}
     - target: {fileID: 475217548122662231, guid: ceb5bb1f6728f3b40a813e437ae4d5d4, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -1532,7 +1532,7 @@ PrefabInstance:
       objectReference: {fileID: -8360724179266662874, guid: ff9ddf9247848774187a858c9dab0341, type: 3}
     - target: {fileID: 5987488994767157962, guid: ceb5bb1f6728f3b40a813e437ae4d5d4, type: 3}
       propertyPath: m_Name
-      value: ActionButtonSwap
+      value: ActionButtonSuffle
       objectReference: {fileID: 0}
     - target: {fileID: 7185519503490343316, guid: ceb5bb1f6728f3b40a813e437ae4d5d4, type: 3}
       propertyPath: actionCost

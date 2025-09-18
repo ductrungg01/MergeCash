@@ -45,8 +45,9 @@ public class Player : MonoBehaviour
         GridManager.Instance.RemoveAllLastCard();
     }
 
-    public void ProcessSwap()
+    public void ProcessSuffle()
     {
-        Debug.Log("[ProcessSwap]");
+        Debug.Log("[ProcessSuffle]");
+        GridManager.Instance.SuffleCards();
     }
 }

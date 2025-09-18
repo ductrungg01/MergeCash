@@ -63,6 +63,8 @@ public class Column : MonoBehaviour
         }
     }
 
+    
+
     #endregion
 
     #region Getters
@@ -121,6 +123,13 @@ public class Column : MonoBehaviour
         }
 
         return best;
+    }
+
+    public List<CardData> GetCardDatas()
+    {
+        List<CardData> cardDatas = new List<CardData>();
+        foreach (var card in cards) cardDatas.Add(card.GetCardData());
+        return cardDatas;
     }
     #endregion
 
@@ -269,7 +278,7 @@ public class Column : MonoBehaviour
         return cards.Count;
     }
 
-    public IEnumerator TryMerge()
+    public IEnumerator TryMerge(bool trySpawnNewRowAfterMerge = true)
     {
         ColumnMergeCardHandler mergeHandler = GetComponent<ColumnMergeCardHandler>();
         if (mergeHandler != null)
@@ -278,14 +287,10 @@ public class Column : MonoBehaviour
 
             try
             {
-                if (mergeHandler.WasMerged)
-                {
+                if (mergeHandler.WasMerged) 
                     Debug.Log("Column had at least one merge");
-                }
-                else
-                {
+                else 
                     Debug.Log("No merge happened");
-                }
 
                 var player = Player.Instance;
 
@@ -295,7 +300,7 @@ public class Column : MonoBehaviour
                 }
                 else
                 {
-                    if (GridManager.Instance.ShouldSpawnNewRow(mergeHandler.WasMerged))
+                    if (trySpawnNewRowAfterMerge && GridManager.Instance.ShouldSpawnNewRow(mergeHandler.WasMerged))
                     {
                         GridManager.Instance.SpawnNewRow();
                     }
@@ -310,8 +315,6 @@ public class Column : MonoBehaviour
             {
                 Debug.LogError("Exception after merge coroutine: " + e);
             }
-
-
         }
     }
 

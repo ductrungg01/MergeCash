@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
@@ -137,6 +138,42 @@ public class GridManager : MonoBehaviour
             {
                 column.RemoveCard(column.CardCount() - 1, false);
             }
+        }
+    }
+
+    public void SuffleCards()
+    {
+        List<CardData> allCards = new List<CardData>();
+        foreach (var column in columns)
+        {
+            allCards.AddRange(column.GetCardDatas());
+        }
+
+        System.Random rng = new System.Random();
+        int n = allCards.Count;
+        while (n > 1)
+        {
+            n--;
+            int k = rng.Next(n + 1);
+            (allCards[k], allCards[n]) = (allCards[n], allCards[k]);
+        }
+
+        int colCount = columns.Count;
+        int baseSize = allCards.Count / colCount;  
+        int remainder = allCards.Count % colCount;  
+
+        int index = 0;
+        for (int i = 0; i < colCount; i++)
+        {
+            int take = baseSize + (i < remainder ? 1 : 0);
+            List<CardData> slice = allCards.GetRange(index, take);
+            columns[i].SetCards(slice);
+            index += take;
+        }
+
+        foreach (var column in columns)
+        {
+            StartCoroutine(column.TryMerge(false));
         }
     }
 

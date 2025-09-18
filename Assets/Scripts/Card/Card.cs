@@ -144,6 +144,11 @@ public class Card : MonoBehaviour
 
     public Column GetOwnerColumn() { return ownerColumn; }
 
+    public CardData GetCardData()
+    {
+        return new CardData(label, backgroundImage.sprite);
+    }
+
     #endregion
 
     void UpdateCardVisibility()
