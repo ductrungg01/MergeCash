@@ -25,6 +25,9 @@ public class Card : MonoBehaviour
 
     private Column ownerColumn;
     private CardDragHandler draggableItem;
+
+    private int point = 0;
+    private int coin = 0;
     private bool isDragging;
 
     #region MonoBehavior funcs
@@ -107,7 +110,18 @@ public class Card : MonoBehaviour
     {
         SetLabel(cardData.label);
         SetBackground(cardData.background);
+        SetPoint(cardData.point);
+        SetCoin(cardData.coin);
     }
+
+    public void SetCardData(string cardDataLabel)
+    {
+        var data = CardDataManager.Instance.GetCardDataByLabel(cardDataLabel);
+        SetCardData(data);
+    }
+
+    private void SetPoint(int point) { this.point = point; }
+    private void SetCoin(int coin) { this.coin = coin; }
 
     public void SetBackground(Sprite background)
     {

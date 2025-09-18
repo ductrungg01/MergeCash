@@ -6,9 +6,9 @@ using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 [System.Serializable]
-public class CardDataRow
+public class StringListWrapper
 {
-    public List<CardData> row = new List<CardData>();
+    public List<string> cards = new List<string>();
 }
 
 public class GridManager : MonoBehaviour
@@ -19,11 +19,11 @@ public class GridManager : MonoBehaviour
     [SerializeField] const int MAX_COLUMNS = 4;
     [SerializeField] const int MAX_ROWS = 8;
 
-
     [SerializeField] private bool useRandomData = false;
 
     [Tooltip("List of starting value of each column")]
-    [SerializeField] List<CardDataRow> startingCardDatas = new List<CardDataRow> ();
+    [SerializeField]
+    private List<StringListWrapper> startingCardDatas = new List<StringListWrapper>();
 
     [SerializeField] private List<int> presetRandomData = new List<int>() { 2, 4, 8, 16, 32, 64 };
 
@@ -77,13 +77,13 @@ public class GridManager : MonoBehaviour
             columns.Add(columnGo.GetComponent<Column>());
         }
 
-        var startingDatas = useRandomData ? new List<CardDataRow>() : startingCardDatas;
+        var startingDatas = useRandomData ? new List<StringListWrapper>() : startingCardDatas;
 
         if (useRandomData)
         {
             for (int i = 0; i < MAX_COLUMNS; ++i)
             {
-                List<CardData> datas = new List<CardData>();
+                List<string> datas = new List<string>();
                 int rndLength = Random.Range(0, 4) + 1;
                 while (rndLength > 0) 
                 {
@@ -95,22 +95,22 @@ public class GridManager : MonoBehaviour
 
                         if (datas.Count == 0)
                         {
-                            datas.Add(new CardData(rndCardValue.ToString()));
+                            datas.Add(rndCardValue.ToString());
                             break;
                         } else
                         {
-                            string top = datas[datas.Count - 1].label;
+                            string top = datas[datas.Count - 1];
                             if (rndCardValue.ToString() != top)
                             {
-                                datas.Add(new CardData(rndCardValue.ToString()));
+                                datas.Add(rndCardValue.ToString());
                                 break;
                             }
                         }
                     }
                 }
-                CardDataRow row = new CardDataRow();
-                row.row = datas;
-                startingDatas.Add(row);
+                var listString = new StringListWrapper();
+                listString.cards = datas;
+                startingDatas.Add(listString);
             }
         }
 
@@ -118,7 +118,7 @@ public class GridManager : MonoBehaviour
         {
             if (i >= startingDatas.Count) break;
 
-            columns[i].SetCards(startingDatas[i].row);
+            columns[i].SetCards(startingDatas[i].cards);
         }
     }
 

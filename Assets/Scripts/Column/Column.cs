@@ -24,13 +24,7 @@ public class Column : MonoBehaviour
 
     [Header("Debug")]
     [SerializeField]
-    private List<CardData> debugCards = new List<CardData>()
-    {
-        new CardData("128"),
-        new CardData("64"),
-        new CardData("8"),
-        new CardData("8")
-    };
+    private List<string> debugCardLabel = new List<string>();
 
     #region Monobehavior funcs
     void OnValidate()
@@ -63,8 +57,23 @@ public class Column : MonoBehaviour
         }
     }
 
-    
+    public void SetCards(List<string> cards)
+    {
+        ClearAllCards();
+        foreach (var cardDataLabel in cards)
+        {
+            GameObject go = Instantiate(cardPrefab, transform);
+            Card card = go.GetComponent<Card>();
+            if (card != null)
+            {
+                var cardData = CardDataManager.Instance.GetCardDataByLabel(cardDataLabel);
+                card.SetCardData(cardData);
+                card.SetOwnerColumn(this);
 
+                AddCardFromBottom(card);
+            }
+        }
+    }
     #endregion
 
     #region Getters
@@ -270,7 +279,7 @@ public class Column : MonoBehaviour
 
     public void GenerateCardFromDebugCards()
     {
-        SetCards(debugCards);
+        SetCards(debugCardLabel);
     }
 
     public int CardCount()
@@ -317,7 +326,6 @@ public class Column : MonoBehaviour
             }
         }
     }
-
 
     #region Dragging
     public void StartDragging(Card card)

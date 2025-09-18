@@ -11,7 +11,7 @@ public class ColumnEditor : Editor
 
         Column column = (Column)target;
 
-        if (GUILayout.Button("Generate cards from debug cards"))
+        if (GUILayout.Button("Generate cards from debug values"))
         {
             column.GenerateCardFromDebugCards();
         }
