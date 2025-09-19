@@ -160,7 +160,7 @@ public class Card : MonoBehaviour
 
     public CardData GetCardData()
     {
-        return new CardData(label, backgroundImage.sprite);
+        return new CardData(this.label, this.backgroundImage.sprite, this.coin, this.point);
     }
 
     #endregion

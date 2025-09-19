@@ -61,7 +61,11 @@ public class UIManager : MonoBehaviour
         {
             FailedPopup.transform.SetAsLastSibling();
             FailedPopup failedPopup = FailedPopup.GetComponent<FailedPopup>();
-            failedPopup.Setup(1200, 10000);
+
+            var score = ScoreManager.Instance.CurrentScore;
+            var highestScore = ScoreManager.Instance.HighestScore;
+
+            failedPopup.Setup(score, highestScore);
         }
     }
 }

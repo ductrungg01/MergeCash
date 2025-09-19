@@ -28,56 +28,56 @@ MonoBehaviour:
   - label: 16
     background: {fileID: -5505915540889215671, guid: 973dce0151e66014cb5b81ed3ca68937, type: 3}
     point: 10
-    coin: 5
+    coin: 4
   - label: 32
     background: {fileID: -8851474228972434031, guid: a06b335a938764c40a1f65caa63d7c2b, type: 3}
-    point: 10
+    point: 20
     coin: 5
   - label: 64
     background: {fileID: -1898138245309601331, guid: 4dc58c979491ae141905b497adb3bc25, type: 3}
-    point: 10
-    coin: 6
+    point: 20
+    coin: 5
   - label: 128
     background: {fileID: 6655871623161705831, guid: 02f97f67fd1cd2c48b2d4bedee64d39e, type: 3}
-    point: 15
-    coin: 7
+    point: 40
+    coin: 6
   - label: 256
     background: {fileID: 7546864251727700139, guid: 5805c4dc9a049534d9b9793fb9e32e5e, type: 3}
-    point: 20
+    point: 40
     coin: 8
   - label: 512
     background: {fileID: -4705489980700376580, guid: 2a9d730521da7284e9411dff95209c9f, type: 3}
-    point: 25
-    coin: 9
+    point: 100
+    coin: 10
   - label: 1024
     background: {fileID: -7053636658306557741, guid: 0df5c84d856e8a145aeabf9655eb2617, type: 3}
-    point: 0
-    coin: 1
+    point: 250
+    coin: 20
   - label: 2048
     background: {fileID: -1397027362505083134, guid: 10868dea22d1e2a4d839ee2f7dd60cda, type: 3}
-    point: 0
-    coin: 0
+    point: 500
+    coin: 40
   - label: 4096
     background: {fileID: -8163497452851275517, guid: ac093bc53a3156047a9ddd8a7d9285a2, type: 3}
-    point: 0
-    coin: 0
+    point: 1000
+    coin: 100
   - label: 8196
     background: {fileID: 2968092853039794660, guid: b335620a556339b4db0c7f5ae4066556, type: 3}
-    point: 0
-    coin: 0
+    point: 2000
+    coin: 200
   - label: 16K
     background: {fileID: -1898138245309601331, guid: 4dc58c979491ae141905b497adb3bc25, type: 3}
-    point: 0
-    coin: 0
+    point: 5000
+    coin: 500
   - label: 32K
     background: {fileID: -1397027362505083134, guid: 10868dea22d1e2a4d839ee2f7dd60cda, type: 3}
-    point: 0
-    coin: 0
+    point: 10000
+    coin: 1200
   - label: 64K
     background: {fileID: 6655871623161705831, guid: 02f97f67fd1cd2c48b2d4bedee64d39e, type: 3}
-    point: 0
-    coin: 0
+    point: 20000
+    coin: 2500
   - label: 128K
     background: {fileID: 7546864251727700139, guid: 5805c4dc9a049534d9b9793fb9e32e5e, type: 3}
-    point: 0
-    coin: 0
+    point: 50000
+    coin: 10000

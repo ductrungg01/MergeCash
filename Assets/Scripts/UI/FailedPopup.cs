@@ -23,10 +23,10 @@ public class FailedPopup : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void Setup(int point, int maxPoint)
+    public void Setup(int score, int highestScore)
     {
-        currentScore = point;
-        bestScore = maxPoint;
+        currentScore = score;
+        bestScore = highestScore;
 
         if (bestScoreText != null)
             bestScoreText.text = bestScore.ToString();

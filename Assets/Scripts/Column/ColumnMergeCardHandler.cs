@@ -62,6 +62,10 @@ public class ColumnMergeCardHandler : MonoBehaviour
                 Card prevCard = column.GetCard(index - 1);
                 if (prevCard != null)
                 {
+                    CardData cardData = prevCard.GetCardData();
+                    ScoreManager.Instance.AddScore(cardData.point);
+                    CoinManager.Instance.AddCoin(cardData.coin);
+
                     prevCard.UpdateNextLabel();
                     AnimateMerge(prevCard, 0.15f);
                 }

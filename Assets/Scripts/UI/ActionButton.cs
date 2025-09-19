@@ -11,10 +11,24 @@ public class ActionButton : MonoBehaviour
     [SerializeField] private TMP_Text txtCost;
     [SerializeField] private float actionCost = 100f;
 
+    private Button button;
+
     private void OnValidate()
     {
         SetActionSprite(actionSprite);
         SetActionCost(actionCost);
+    }
+
+    private void Awake()
+    {
+        button = GetComponent<Button>();
+
+        button.onClick.AddListener(UseCoin);
+    }
+
+    private void UseCoin()
+    {
+        CoinManager.Instance.UseCoin(Mathf.RoundToInt(actionCost));
     }
 
     public void SetActionSprite(Sprite actionSprite)
