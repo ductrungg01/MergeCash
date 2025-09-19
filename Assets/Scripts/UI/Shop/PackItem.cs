@@ -8,6 +8,8 @@ public class PackItem : MonoBehaviour
     [Header("Data")]
     public Sprite icon;
     public string textValue;
+    public E_ShopableItemType type = E_ShopableItemType.COIN;
+    public int quantity = 1;
 
     [Header("UI References")]
     public Image iconImage;

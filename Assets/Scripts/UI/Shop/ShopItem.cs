@@ -2,12 +2,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Globalization;
+using System;
 
 [ExecuteAlways]
 public class ShopItem : MonoBehaviour
 {
     [Header("Data")]
     public Sprite icon;
+    public E_ShopableItemType type = E_ShopableItemType.COIN;
     public int quantity;
     public float price = 0f;
     public string currency = "$";
@@ -16,10 +18,31 @@ public class ShopItem : MonoBehaviour
     public Image iconImage;
     public TMP_Text quantityText;
     public TMP_Text priceText;
+    public Button buttonBuy;
 
     private void OnValidate()
     {
         UpdateUI();
+    }
+
+    private void Awake()
+    {
+        buttonBuy.onClick.AddListener(OnClickButtonBuy);
+    }
+
+    private void OnClickButtonBuy()
+    {
+        switch (type) {
+            case E_ShopableItemType.COIN:
+                CoinManager.Instance.AddCoin(quantity);
+                break;
+            case E_ShopableItemType.DELETE:
+                break;
+            case E_ShopableItemType.SUFFLE:
+                break;
+            default:
+                break;
+        }
     }
 
     private void UpdateUI()

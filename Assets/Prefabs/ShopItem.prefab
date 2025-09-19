@@ -560,9 +560,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   icon: {fileID: -1445136671764609501, guid: f6fc6db3caf94ab44b31e08c5a019480, type: 3}
+  type: 0
   quantity: 100
   price: 1.99
   currency: $
   iconImage: {fileID: 7868889696443485395}
   quantityText: {fileID: 1553534344643810116}
   priceText: {fileID: 5709529239387283515}
+  buttonBuy: {fileID: 5108526889621171361}
