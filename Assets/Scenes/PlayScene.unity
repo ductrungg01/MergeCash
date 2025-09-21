@@ -2357,7 +2357,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9059454729448770369, guid: f35aec991d6d2354783ca80bf4dc75f4, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5088,7 +5088,7 @@ MonoBehaviour:
   m_ChildAlignment: 1
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 215, y: 1270}
+  m_CellSize: {x: 215, y: 1067.9174}
   m_Spacing: {x: 20, y: -100}
   m_Constraint: 1
   m_ConstraintCount: 4

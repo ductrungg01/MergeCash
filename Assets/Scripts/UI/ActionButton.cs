@@ -33,6 +33,8 @@ public class ActionButton : MonoBehaviour
 
     private void Update()
     {
+        if (Player.Instance == null) return;
+
         switch (actionType)
         {
             case E_ShopableItemType.DELETE:
