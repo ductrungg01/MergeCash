@@ -4,5 +4,5 @@ public enum E_ShopableItemType
 {
     COIN,
     DELETE,
-    SUFFLE
+    SHUFFLE
 }

@@ -141,7 +141,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public void SuffleCards()
+    public void ShuffleCards()
     {
         List<CardData> allCards = new List<CardData>();
         foreach (var column in columns)
@@ -294,6 +294,15 @@ public class GridManager : MonoBehaviour
         }
 
         return minLabel;
+    }
+
+    public bool IsGridEmpty()
+    {
+        foreach (var column in columns)
+        {
+            if (column.CardCount() > 0) return false;
+        }
+        return true;
     }
 
     private int GetMaxDepth()

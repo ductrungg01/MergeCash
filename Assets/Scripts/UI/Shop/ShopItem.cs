@@ -32,13 +32,17 @@ public class ShopItem : MonoBehaviour
 
     private void OnClickButtonBuy()
     {
+        var player = Player.Instance;
+
         switch (type) {
             case E_ShopableItemType.COIN:
                 CoinManager.Instance.AddCoin(quantity);
                 break;
             case E_ShopableItemType.DELETE:
+                player.SetRemainDeleteAction(player.GetRemainDeleteAction() + quantity);
                 break;
-            case E_ShopableItemType.SUFFLE:
+            case E_ShopableItemType.SHUFFLE:
+                player.SetRemainShuffleAction(player.GetRemainShuffleAction() + quantity);
                 break;
             default:
                 break;

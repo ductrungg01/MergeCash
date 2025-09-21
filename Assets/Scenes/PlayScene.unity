@@ -1339,7 +1339,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 475217548122662231, guid: ceb5bb1f6728f3b40a813e437ae4d5d4, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 475217548122662231, guid: ceb5bb1f6728f3b40a813e437ae4d5d4, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -1445,6 +1445,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1595741901714185593, guid: ceb5bb1f6728f3b40a813e437ae4d5d4, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3676457848920311080, guid: ceb5bb1f6728f3b40a813e437ae4d5d4, type: 3}
       propertyPath: m_text
       value: 250
@@ -1453,6 +1457,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: -8360724179266662874, guid: ff9ddf9247848774187a858c9dab0341, type: 3}
+    - target: {fileID: 5680083236506506973, guid: ceb5bb1f6728f3b40a813e437ae4d5d4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5987488994767157962, guid: ceb5bb1f6728f3b40a813e437ae4d5d4, type: 3}
       propertyPath: m_Name
       value: ActionButtonSuffle
@@ -1460,6 +1468,10 @@ PrefabInstance:
     - target: {fileID: 7185519503490343316, guid: ceb5bb1f6728f3b40a813e437ae4d5d4, type: 3}
       propertyPath: actionCost
       value: 250
+      objectReference: {fileID: 0}
+    - target: {fileID: 7185519503490343316, guid: ceb5bb1f6728f3b40a813e437ae4d5d4, type: 3}
+      propertyPath: actionType
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7185519503490343316, guid: ceb5bb1f6728f3b40a813e437ae4d5d4, type: 3}
       propertyPath: actionSprite
@@ -3871,7 +3883,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 475217548122662231, guid: ceb5bb1f6728f3b40a813e437ae4d5d4, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 475217548122662231, guid: ceb5bb1f6728f3b40a813e437ae4d5d4, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -3977,9 +3989,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1595741901714185593, guid: ceb5bb1f6728f3b40a813e437ae4d5d4, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5680083236506506973, guid: ceb5bb1f6728f3b40a813e437ae4d5d4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5987488994767157962, guid: ceb5bb1f6728f3b40a813e437ae4d5d4, type: 3}
       propertyPath: m_Name
       value: ActionButtonDelete
+      objectReference: {fileID: 0}
+    - target: {fileID: 7185519503490343316, guid: ceb5bb1f6728f3b40a813e437ae4d5d4, type: 3}
+      propertyPath: remain
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7185519503490343316, guid: ceb5bb1f6728f3b40a813e437ae4d5d4, type: 3}
+      propertyPath: actionType
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4137,6 +4165,7 @@ GameObject:
   m_Component:
   - component: {fileID: 913529025}
   - component: {fileID: 913529024}
+  - component: {fileID: 913529026}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -4174,6 +4203,18 @@ Transform:
   - {fileID: 529031382}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &913529026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 913529021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 207373d127ffb2b46929003fd69b91cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &932514845
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,6 +5,8 @@ public class Player : MonoBehaviour
 {
     public static Player Instance { get; private set; }
 
+    private PlayerItemManager playerItemManager;
+
     private void Awake()
     {
         // Singleton pattern
@@ -14,6 +16,7 @@ public class Player : MonoBehaviour
             return;
         }
         Instance = this;
+        playerItemManager = GetComponent<PlayerItemManager>();
     }
 
     public static Player GetInstance()
@@ -38,16 +41,47 @@ public class Player : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
-    public void ProcessDelete()
+    public void ProcessDelete(bool useActionItem = true)
     {
         Debug.Log("[ProcessDelete]");
+
+        if (useActionItem)
+        {
+            SetRemainDeleteAction(GetRemainDeleteAction() - 1);
+        }
 
         GridManager.Instance.RemoveAllLastCard();
     }
 
-    public void ProcessSuffle()
+    public void ProcessShuffle(bool useActionItem = true)
     {
-        Debug.Log("[ProcessSuffle]");
-        GridManager.Instance.SuffleCards();
+        Debug.Log("[ProcessShuffle]");
+
+        if (useActionItem)
+        {
+            SetRemainShuffleAction(GetRemainShuffleAction() - 1);
+        }
+
+        GridManager.Instance.ShuffleCards();
+    }
+
+    public int GetRemainDeleteAction()
+    {
+        return playerItemManager.GetRemainDeleteAction();
+    }
+
+    public int GetRemainShuffleAction()
+    {
+        return playerItemManager.GetRemainShuffleAction();
+    }
+
+    public void SetRemainDeleteAction(int newValue)
+    {
+        playerItemManager.SetRemainDeleteAction(newValue);
+    }
+
+    public void SetRemainShuffleAction(int newValue)
+    {
+        playerItemManager.SetRemainShuffleAction(newValue);
     }
 }
